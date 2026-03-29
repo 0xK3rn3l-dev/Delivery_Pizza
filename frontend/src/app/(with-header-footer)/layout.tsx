@@ -1,6 +1,5 @@
-// app/(with-header-footer)/layout.tsx
-//import { Header } from '@/widgets/header';
-//import { Footer } from '@/widgets/footer';
+import { Header } from '@/widgets/header';
+import { Footer } from '@/widgets/footer';
 
 export default function WithHeaderFooterLayout({
   children,
@@ -8,10 +7,12 @@ export default function WithHeaderFooterLayout({
   children: React.ReactNode;
 }) {
   return (
-    <>
-      <main className="container mx-auto px-4 py-8">
+    <div className="min-h-screen flex flex-col">
+      <Header />
+      <main className="flex-1 container mx-auto px-4 py-8">
         {children}
       </main>
-    </>
+      <Footer />
+    </div>
   );
 }
