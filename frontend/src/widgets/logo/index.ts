@@ -1,0 +1,1 @@
+export { PromoLogo } from './ui/PromoLogo';

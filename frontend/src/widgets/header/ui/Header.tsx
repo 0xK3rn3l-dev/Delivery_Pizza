@@ -2,20 +2,18 @@
 
 import Link from 'next/link';
 import { Button } from '@/shared/ui';
+import { LanguageSwitcher } from '@/features/LanguageSwitcher';
+import { ThemeSwitcher } from '@/features/ThemeSwitcher';
 
 export const Header = () => {
   return (
     <header className="bg-white shadow-md sticky top-0 z-50">
-      <div className="container mx-auto px-2 py-2">
+      <div className="max-w-5xl mx-auto px-2 py-2">
         <div className="flex items-center justify-between">
-          {/* Логотип */}
-          <Link 
-            href="/" 
-            className="text-2xl font-bold text-orange-500 hover:text-orange-600 transition"
-          >
-            Delivery Pizza 🍕
-          </Link>
-          
+            <div className="flex items-center gap-4">
+              <ThemeSwitcher />
+              <LanguageSwitcher />
+            </div>
           {/* Навигация */}
           <nav className="hidden md:flex items-center gap-6">
             <Link 
@@ -29,6 +27,20 @@ export const Header = () => {
               className="text-gray-700 hover:text-orange-500 transition font-semibold text-base"
             >
               Корзина
+            </Link>
+
+            <Link 
+              href="/delivery" 
+              className="text-gray-700 hover:text-orange-500 transition font-semibold text-base"
+            >
+              Доставка
+            </Link>
+
+            <Link 
+              href="/about" 
+              className="text-gray-700 hover:text-orange-500 transition font-semibold text-base"
+            >
+              О нас
             </Link>
           </nav>
           
