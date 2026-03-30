@@ -4,7 +4,8 @@ export interface PromoCard {
   subtitle: string;
   bgColor: string;
   buttonText: string;
-  emoji: string;
+  image?: string;
+  emoji?: string;
   discount: string;
 }
 
@@ -20,11 +21,11 @@ export const promoCards: PromoCard[] = [
   },
   {
     id: 2,
-    title: 'Скидка 20%',
-    subtitle: 'На первый заказ',
+    title: 'Большая пицца',
+    subtitle: 'За лайк и подписку',
     bgColor: 'from-purple-500 to-pink-500',
     buttonText: 'Получить',
-    emoji: '🎁',
+    image: '/images/Banner-cards/darim_big_pizza.jpg',
     discount: '-20%',
   },
   {
