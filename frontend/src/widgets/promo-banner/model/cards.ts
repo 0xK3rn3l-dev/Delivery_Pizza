@@ -1,13 +1,4 @@
-export interface PromoCard {
-  id: number;
-  title: string;
-  subtitle: string;
-  bgColor: string;
-  buttonText: string;
-  image?: string;
-  emoji?: string;
-  discount: string;
-}
+import { PromoCard } from './types';
 
 export const promoCards: PromoCard[] = [
 {
@@ -16,8 +7,7 @@ export const promoCards: PromoCard[] = [
     subtitle: 'Свежая, горячая за 30 минут',
     bgColor: 'from-orange-500 to-red-500',
     buttonText: 'Заказать',
-    emoji: '🍕',
-    discount: '-20%',
+    image: '/images/Banner-cards/pizza_faster_30_min.jpg',
   },
   {
     id: 2,
@@ -25,8 +15,7 @@ export const promoCards: PromoCard[] = [
     subtitle: 'За лайк и подписку',
     bgColor: 'from-purple-500 to-pink-500',
     buttonText: 'Получить',
-    image: '/images/Banner-cards/darim_big_pizza.jpg',
-    discount: '-20%',
+    image: '/images/Banner-cards/big-pizza-podarok.jpg',
   },
   {
     id: 3,
@@ -34,8 +23,8 @@ export const promoCards: PromoCard[] = [
     subtitle: 'Пицца + напиток + закуска',
     bgColor: 'from-green-500 to-teal-500',
     buttonText: 'Выбрать',
-    emoji: '🍽️',
-    discount: '-30%',
+    image: '/images/Banner-cards/combo-pizza-napitok-zakuska.jpg',
+
   },
   {
     id: 4,
@@ -43,16 +32,16 @@ export const promoCards: PromoCard[] = [
     subtitle: 'При заказе от 1000₽',
     bgColor: 'from-blue-500 to-cyan-500',
     buttonText: 'Подробнее',
-    emoji: '🛵',
-    discount: '🚚',
+    image: '/images/Banner-cards/free-delivery-from-1000-zakaz.jpg',
+
   },
   {
     id: 5,
-    title: 'Подарок к заказу',
-    subtitle: 'При заказе от 1000₽',
+    title: 'Подарок',
+    subtitle: 'При заказе от 3000',
     bgColor: 'from-pink-500 to-rose-500',
     buttonText: 'Узнать',
-    emoji: '🎁',
-    discount: '🎁',
+    image: '/images/Banner-cards/podarok-k-zakazu-ot-3000.jpg',
+
   },
 ];

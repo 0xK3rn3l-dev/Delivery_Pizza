@@ -1,16 +1,18 @@
 'use client';
 
 import Image from 'next/image';
-import { PromoCard } from '../model/cards';
-import { Button } from '@/shared/ui';
-import Link from 'next/link';
+import { PromoCard } from '../model/types';
 
 interface PromoCardItemProps {
   card: PromoCard;
+  onClick: () => void;
 }
 
-export const PromoCardItem = ({ card }: PromoCardItemProps) => (
-  <div className="group/card shrink-0 w-64 md:w-56 flex flex-col rounded-2xl overflow-hidden shadow-md hover:shadow-2xl transition-all duration-300 hover:-translate-y-1 cursor-pointer">
+export const PromoCardItem = ({ card, onClick }: PromoCardItemProps) => (
+  <div 
+    onClick={onClick}
+    className="group/card shrink-0 w-64 md:w-56 flex flex-col rounded-2xl overflow-hidden shadow-md hover:shadow-2xl transition-all duration-300 hover:-translate-y-1 cursor-pointer"
+  >
     <div className="relative h-72 overflow-hidden">
       {card.image ? (
         <div className="absolute inset-0">
@@ -27,11 +29,7 @@ export const PromoCardItem = ({ card }: PromoCardItemProps) => (
           <div className="absolute inset-0 bg-black/40"></div>
         </div>
       )}
-      
-      <div className="absolute top-3 right-3 bg-white/95 backdrop-blur-sm rounded-full px-3 py-1 text-sm font-bold text-orange-600 shadow-md z-10">
-        {card.discount}
-      </div>
-      
+
       {!card.image && card.emoji && (
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
           <span className="text-8xl transition-transform duration-300 group-hover/card:scale-110 group-hover/card:rotate-3">
@@ -47,15 +45,6 @@ export const PromoCardItem = ({ card }: PromoCardItemProps) => (
         <p className="text-white/90 text-sm mb-4 leading-relaxed drop-shadow">
           {card.subtitle}
         </p>
-        <Link href="/menu">
-          <Button
-            variant="outline"
-            size="sm"
-            className="w-full bg-white/10 backdrop-blur-sm border-white text-white cursor-pointer hover:bg-white/10! hover:text-white! hover:border-white!"
-          >
-            {card.buttonText} →
-          </Button>
-        </Link>
       </div>
     </div>
   </div>
