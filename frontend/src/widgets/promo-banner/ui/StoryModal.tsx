@@ -92,7 +92,7 @@ export const StoryModal = ({
               <div className="absolute inset-0 bg-black/40"></div>
             </div>
           ) : (
-            <div className={`absolute inset-0 bg-gradient-to-br ${story.bgColor || 'from-orange-500 to-red-500'}`}></div>
+            <div className={`absolute inset-0 bg-linear-to-br ${story.bgColor || 'from-orange-500 to-red-500'}`}></div>
           )}
         
           <div className="relative z-10 text-left animate-in fade-in zoom-in duration-300 w-full">
