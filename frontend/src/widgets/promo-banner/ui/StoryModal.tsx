@@ -130,16 +130,6 @@ export const StoryModal = ({
             onClick={(e) => { e.stopPropagation(); handleNextPage(); }}
           />
         )}
-
-        {/* Зона паузы */}
-        <div 
-          className="absolute bottom-0 left-1/3 right-1/3 h-20 z-10"
-          onMouseDown={() => setIsPaused(true)}
-          onMouseUp={() => setIsPaused(false)}
-          onMouseLeave={() => setIsPaused(false)}
-          onTouchStart={() => setIsPaused(true)}
-          onTouchEnd={() => setIsPaused(false)}
-        />
       </div>
     </div>
   );
