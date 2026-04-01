@@ -2,6 +2,7 @@
 
 import Image from 'next/image';
 import { Pizza } from '../model/types';
+import { escapeHtml } from '@/shared/lib';
 
 interface PizzaCardProps {
     pizza: Pizza;
@@ -9,27 +10,32 @@ interface PizzaCardProps {
 }
 
 export const PizzaCard = ({ pizza, onAddToCart }: PizzaCardProps) => {
+    const safeName = escapeHtml(pizza.name);
+    const safePrice = pizza.price;
+    
     return (
         <div className="group bg-white rounded-xl shadow-md hover:shadow-lg transition-all duration-300 hover:-translate-y-1 overflow-hidden">
             <div className="relative h-56 overflow-hidden">
                 <Image
-                    src={pizza.image}
-                    alt={pizza.name}
+                    src={pizza.image || '/images/placeholder.jpg'}
+                    alt={safeName}
                     fill
                     className="object-cover group-hover:scale-105 transition-transform duration-500"
+                    onError={(e) => {
+                        (e.target as HTMLImageElement).src = '/images/placeholder.jpg';
+                    }}
                 />
                 {pizza.rating && (
                     <div className="absolute top-2 right-2 bg-orange-500 text-white px-2 py-1 rounded-lg text-sm font-semibold">
-                        ★ {pizza.rating}
+                        ★ {escapeHtml(String(pizza.rating))}
                     </div>
                 )}
             </div>
             
             <div className="p-5">
-                <h3 className="text-xl font-bold text-gray-800 mb-4 duration-300">
-                    {pizza.name}
+                <h3 className="text-xl font-bold text-gray-800 mb-4">
+                    {safeName}
                 </h3>
-                
                 
                 <button
                     onClick={(e) => {
@@ -38,7 +44,7 @@ export const PizzaCard = ({ pizza, onAddToCart }: PizzaCardProps) => {
                     }}
                     className="inline-flex items-center justify-center px-5 py-2 border-2 border-orange-500 text-orange-500 hover:bg-orange-500 hover:text-white font-bold text-sm rounded-full transition-all duration-300 cursor-pointer"
                 >
-                    от {pizza.price} ₽
+                    от {safePrice} ₽
                 </button>
             </div>
         </div>

@@ -2,7 +2,7 @@
 
 import { usePromoBannerScroll } from '../model/usePromoBannerScroll';
 import { usePromoStories } from '../model/usePromoStories';
-import { promoCards } from '../model/cards';
+import { storyCards } from '../model/cards';
 import { PromoCardItem } from './PromoCardItem';
 import { StoryModal } from './StoryModal';
 
@@ -11,12 +11,14 @@ export const PromoBanner = () => {
     usePromoBannerScroll();
   
   const {
-    selectedStoryIndex,
+    selectedCardIndex,
+    currentCard,
     openStory,
     closeStory,
-    nextStory,
-    prevStory,
-    currentStory,
+    nextPage: onNextCard,
+    prevPage: onPrevCard,
+    hasNextCard,
+    hasPrevCard,
   } = usePromoStories();
   
   return (
@@ -67,14 +69,14 @@ export const PromoBanner = () => {
               </div>
             )}
 
-            {/* Карточки */}
+                        {/* Карточки */}
             <div className="px-2 md:px-8">
               <div
                 ref={scrollContainerRef}
                 className="flex gap-3 overflow-x-auto scroll-smooth pb-4 px-2 md:px-8"
                 style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
               >
-                {promoCards.map((card, index) => (
+                {storyCards.map((card, index) => (
                   <PromoCardItem 
                     key={card.id} 
                     card={card} 
@@ -88,16 +90,16 @@ export const PromoBanner = () => {
       </div>
 
       {/* Модальное окно сторис */}
-      {selectedStoryIndex !== null && currentStory && (
+      {selectedCardIndex !== null && currentCard && (
         <StoryModal
-          story={currentStory}
+          card={currentCard}
           onClose={closeStory}
-          onNext={nextStory}
-          onPrev={prevStory}
-          hasNext={selectedStoryIndex < promoCards.length - 1}
-          hasPrev={selectedStoryIndex > 0}
-          totalStories={promoCards.length}
-          currentIndex={selectedStoryIndex}
+          onNextCard={onNextCard}
+          onPrevCard={onPrevCard}
+          hasNextCard={hasNextCard}
+          hasPrevCard={hasPrevCard}
+          totalCards={storyCards.length}
+          currentCardIndex={selectedCardIndex}
         />
       )}
     </>

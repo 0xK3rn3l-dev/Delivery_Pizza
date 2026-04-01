@@ -1,51 +1,41 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { ActionRenderer } from '@/features/story-actions';
 import { StoryModalProps } from '../model/types';
+import { useStoryModal } from '../model/useStoryModal';
 
 export const StoryModal = ({ 
-  story, 
+  card, 
   onClose, 
-  onNext, 
-  onPrev, 
-  hasNext, 
-  hasPrev,
-  totalStories,
-  currentIndex
+  onNextCard, 
+  onPrevCard, 
+  hasNextCard, 
+  hasPrevCard,
+  onAddToCart
 }: StoryModalProps) => {
-  const [progress, setProgress] = useState(0);
-  const [isPaused, setIsPaused] = useState(false);
-  const [isClosing, setIsClosing] = useState(false);
+  const {
+    currentPage,
+    currentPageIndex,
+    totalPages,
+    progress,
+    isClosing,
+    isPaused,
+    handleClose,
+    handleNextPage,
+    handlePrevPage,
+    setIsPaused,
+  } = useStoryModal({
+    card,
+    onNextCard,
+    onPrevCard,
+    hasNextCard,
+    hasPrevCard,
+    onClose,
+  });
 
-  // Прогресс просмотра (5 секунд на сторис)
-  useEffect(() => {
-    if (isPaused) return;
-    
-    const interval = setInterval(() => {
-      setProgress(prev => {
-        if (prev >= 100) {
-          onNext();
-          return 0;
-        }
-        return prev + 2;
-      });
-    }, 100);
-    
-    return () => clearInterval(interval);
-  }, [isPaused, onNext]);
-
-  // Сброс прогресса при смене сторис
-  useEffect(() => {
-    setProgress(0);
-  }, [story.id]);
-
-  const handleClose = () => {
-    setIsClosing(true);
-    setTimeout(() => {
-      onClose();
-      setIsClosing(false);
-    }, 300);
-  };
+  if (!currentPage) {
+    return null;
+  }
 
   return (
     <div 
@@ -58,14 +48,14 @@ export const StoryModal = ({
     >
       <div className="relative w-full max-w-md h-[600px] bg-black rounded-2xl overflow-hidden shadow-2xl">
         
-        {/* Прогресс-бары - динамические на основе totalStories */}
+        {/* Прогресс-бары */}
         <div className="absolute top-4 left-4 right-4 flex gap-1 z-20">
-          {Array(totalStories).fill(0).map((_, idx) => (
+          {Array(totalPages).fill(0).map((_, idx) => (
             <div key={idx} className="flex-1 h-1 bg-white/30 rounded-full overflow-hidden">
               <div 
                 className="h-full bg-white transition-all duration-100"
                 style={{ 
-                  width: `${idx < currentIndex ? 100 : idx === currentIndex ? progress : 0}%` 
+                  width: `${idx < currentPageIndex ? 100 : idx === currentPageIndex ? progress : 0}%` 
                 }}
               />
             </div>
@@ -80,59 +70,70 @@ export const StoryModal = ({
           ✕
         </button>
 
-        {/* Контент сторис */}
+        {/* Контент */}
         <div className="relative h-full flex flex-col items-start justify-end p-6 pb-12 text-white">
-          {story.image ? (
+          {currentPage.image ? (
             <div className="absolute inset-0">
               <img 
-                src={story.image} 
-                alt={story.title}
+                src={currentPage.image} 
+                alt={currentPage.title || card.title}
                 className="w-full h-full object-cover"
               />
               <div className="absolute inset-0 bg-black/40"></div>
             </div>
           ) : (
-            <div className={`absolute inset-0 bg-linear-to-br ${story.bgColor || 'from-orange-500 to-red-500'}`}></div>
+            <div className={`absolute inset-0 bg-linear-to-br ${currentPage.bgColor || card.coverBgColor || 'from-orange-500 to-red-500'}`}></div>
           )}
         
-          <div className="relative z-10 text-left animate-in fade-in zoom-in duration-300 w-full">
-            {story.emoji && (
-              <div className="text-8xl mb-4 drop-shadow-lg">{story.emoji}</div>
+          <div className="relative z-10 text-left w-full">
+            {currentPage.emoji && (
+              <div className="text-8xl mb-4 drop-shadow-lg">{currentPage.emoji}</div>
             )}
-
+ 
             <div className="space-y-2 max-w-[80%]">
               <h2 className="text-3xl font-bold drop-shadow-lg leading-tight">
-                {story.title}
+                {currentPage.title || card.title}
               </h2>
               <p className="text-base opacity-90 drop-shadow leading-relaxed">
-                {story.subtitle}
+                {currentPage.subtitle || card.subtitle}
               </p>
-              {story.content && (
-                <p className="text-sm opacity-80 mt-2 drop-shadow">
-                  {story.content}
+              {currentPage.content && (
+                <p className="text-sm opacity-80 mt-2 drop-shadow whitespace-pre-line">
+                  {currentPage.content}
                 </p>
               )}
+              
+              {/* Кнопка действия */}
+              {currentPage.action && (
+                <div className="mt-6">
+                  <ActionRenderer 
+                    action={currentPage.action} 
+                    onClose={handleClose}
+                    onAddToCart={onAddToCart}
+                  />
+                </div>
+              )}
             </div>
-    </div>
+          </div>
         </div>
 
-        {/* Зоны для навигации */}
-        {hasPrev && (
+        {/* Зоны навигации */}
+        {(hasPrevCard || currentPageIndex > 0) && (
           <div 
-            className="absolute left-0 top-0 w-1/3 h-full cursor-pointer z-10"
-            onClick={(e) => { e.stopPropagation(); onPrev(); }}
+            className="absolute left-0 top-0 w-1/3 h-[70%] cursor-pointer z-10"
+            onClick={(e) => { e.stopPropagation(); handlePrevPage(); }}
           />
         )}
-        {hasNext && (
+        {(hasNextCard || currentPageIndex < totalPages - 1) && (
           <div 
-            className="absolute right-0 top-0 w-1/3 h-full cursor-pointer z-10"
-            onClick={(e) => { e.stopPropagation(); onNext(); }}
+            className="absolute right-0 top-0 w-1/3 h-[70%] cursor-pointer z-10"
+            onClick={(e) => { e.stopPropagation(); handleNextPage(); }}
           />
         )}
 
-        {/* Пауза при нажатии */}
+        {/* Зона паузы */}
         <div 
-          className="absolute bottom-0 left-0 right-0 h-20 z-10"
+          className="absolute bottom-0 left-1/3 right-1/3 h-20 z-10"
           onMouseDown={() => setIsPaused(true)}
           onMouseUp={() => setIsPaused(false)}
           onMouseLeave={() => setIsPaused(false)}
