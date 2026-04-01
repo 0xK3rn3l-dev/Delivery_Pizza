@@ -30,7 +30,7 @@ export const PromoCardItem = ({ card, onClick }: PromoCardItemProps) => (
           <div className="absolute inset-0 bg-black/40"></div>
         </div>
       )}
-
+ 
       {!card.coverImage && card.coverEmoji && (
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
           <span className="text-8xl transition-transform duration-300 group-hover/card:scale-110 group-hover/card:rotate-3">

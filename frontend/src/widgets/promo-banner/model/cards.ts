@@ -1,6 +1,6 @@
 import { StoryCard } from './types';
 import { createLinkAction, createButtonAction } from '@/features/story-actions';
-
+ 
 export const storyCards: StoryCard[] = [
   {
     id: 1,

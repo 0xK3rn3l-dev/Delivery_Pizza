@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import "./global.css";
 
-
 export const metadata: Metadata = {
   title: "Pizza Delivery",
   description: "Доставка вкусной пиццы",

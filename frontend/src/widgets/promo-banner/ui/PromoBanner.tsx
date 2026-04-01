@@ -1,25 +1,18 @@
 'use client';
 
 import { usePromoBannerScroll } from '../model/usePromoBannerScroll';
-import { usePromoStories } from '../model/usePromoStories';
 import { storyCards } from '../model/cards';
 import { PromoCardItem } from './PromoCardItem';
-import { StoryModal } from './StoryModal';
+import { StoryViewer } from './StoryViewer';
+import { useState } from 'react';
+import { StoryCard } from '../model/types';
+
 
 export const PromoBanner = () => {
   const { scrollContainerRef, showLeftButton, showRightButton, scroll } =
     usePromoBannerScroll();
   
-  const {
-    selectedCardIndex,
-    currentCard,
-    openStory,
-    closeStory,
-    nextPage: onNextCard,
-    prevPage: onPrevCard,
-    hasNextCard,
-    hasPrevCard,
-  } = usePromoStories();
+  const [activeCard, setActiveCard] = useState<StoryCard | null>(null);
   
   return (
     <>
@@ -76,11 +69,11 @@ export const PromoBanner = () => {
                 className="flex gap-3 overflow-x-auto scroll-smooth pb-4 px-2 md:px-8"
                 style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
               >
-                {storyCards.map((card, index) => (
-                  <PromoCardItem 
-                    key={card.id} 
-                    card={card} 
-                    onClick={() => openStory(index)}
+                {storyCards.map((card) => (
+                  <PromoCardItem
+                    key={card.id}
+                    card={card}
+                    onClick={() => setActiveCard(card)}
                   />
                 ))}
               </div>
@@ -90,17 +83,8 @@ export const PromoBanner = () => {
       </div>
 
       {/* Модальное окно сторис */}
-      {selectedCardIndex !== null && currentCard && (
-        <StoryModal
-          card={currentCard}
-          onClose={closeStory}
-          onNextCard={onNextCard}
-          onPrevCard={onPrevCard}
-          hasNextCard={hasNextCard}
-          hasPrevCard={hasPrevCard}
-          totalCards={storyCards.length}
-          currentCardIndex={selectedCardIndex}
-        />
+      {activeCard && (
+        <StoryViewer page={activeCard.pages[0]}card={activeCard} onClose={() => setActiveCard(null)}/>
       )}
     </>
   );
