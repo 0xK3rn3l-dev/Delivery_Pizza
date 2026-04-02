@@ -1,9 +1,29 @@
 
 
 import { StoryCard, StoryPage } from "../model/types";
+import { useStoryAction } from '@/features/story-actions';
 
-export const StoryPageView = ({ page, card }: { page: StoryPage; card: StoryCard }) => {
-  console.log('StoryPageView received:', { page, card });
+
+interface StoryPageViewProps {
+  page: StoryPage;
+  card: StoryCard;
+  onClose?: () => void; // добавим для close action
+}
+
+
+export const StoryPageView = ({ page, card, onClose }: StoryPageViewProps) => {
+  
+  const { executeAction } = useStoryAction({ 
+    onClose,  // для close action
+    // onAddToCart можно добавить позже
+  });
+
+  const handleAction = () => {
+    if (page.action) {
+      executeAction(page.action);
+    }
+  };
+
   return (
     <div className="instastories-page w-full h-full relative flex items-end p-6 text-white">
       
@@ -36,6 +56,22 @@ export const StoryPageView = ({ page, card }: { page: StoryPage; card: StoryCard
             {page.content}
           </p>
         )}
+
+        {/* КНОПКА ДЕЙСТВИЯ */}
+        {page.action && (
+          <button
+            onClick={handleAction}
+            className={`
+              mt-6 px-6 py-3 rounded-full font-semibold text-sm 
+              transition-all transform hover:scale-105 active:scale-95 shadow-lg
+              ${page.action.className || 'bg-white text-black hover:bg-gray-100'}
+            `}
+          >
+            {page.action.text || 'Подробнее'}
+          </button>
+        )}
+
+
       </div>
     </div>
   )

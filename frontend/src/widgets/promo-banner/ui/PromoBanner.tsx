@@ -84,7 +84,11 @@ export const PromoBanner = () => {
 
       {/* Модальное окно сторис */}
       {activeCard && (
-        <StoryViewer page={activeCard.pages[0]}card={activeCard} onClose={() => setActiveCard(null)}/>
+        <StoryViewer 
+          cards={storyCards}
+          startCardIndex={storyCards.findIndex(c => c.id === activeCard.id)}
+          onClose={() => setActiveCard(null)}
+        />
       )}
     </>
   );
