@@ -1,6 +1,6 @@
 import { StoryCard } from './types';
 import { createLinkAction, createButtonAction } from '@/features/story-actions';
-
+ 
 export const storyCards: StoryCard[] = [
   {
     id: 1,
@@ -59,9 +59,9 @@ export const storyCards: StoryCard[] = [
       {
         id: '2-3',
         type: 'text',
-        title: 'Как получить',
-        subtitle: '3 простых шага',
-        content: '1. Подпишитесь на наш Telegram\n2. Поставьте лайк\n3. Покажите подписку курьеру',
+        title: 'Все очень просто!',
+        subtitle: 'И ваша пицца уже в пути',
+        content: 'Предложение действует при заказе от 500 рублей.',
         bgColor: 'from-purple-600 to-pink-600',
       },
       {
