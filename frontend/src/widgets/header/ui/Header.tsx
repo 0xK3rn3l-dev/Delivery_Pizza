@@ -36,12 +36,6 @@ export const Header = () => {
               Доставка
             </Link>
 
-            <Link 
-              href="/about" 
-              className="text-gray-700 hover:text-orange-500 transition font-semibold text-base"
-            >
-              О нас
-            </Link>
           </nav>
           
           {/* Кнопка входа */}

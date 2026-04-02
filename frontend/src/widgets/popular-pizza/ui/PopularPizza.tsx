@@ -11,7 +11,7 @@ export const PopularPizza = ({ title = 'Популярное', className = '' }:
         console.log('Добавлено в корзину:', pizza);
         // Здесь будет логика добавления в корзину
     };
-
+ 
     if (isLoading) {
         return (
             <div className={`max-w-5xl mx-auto px-16 py-12 ${className}`}>

@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import "./global.css";
 
 export const metadata: Metadata = {
-  title: "Pizza Delivery",
+  title: "Delivery Pizza",
   description: "Доставка вкусной пиццы",
 };
 

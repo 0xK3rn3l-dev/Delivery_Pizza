@@ -7,7 +7,7 @@ export const MainNavigationWidget = () => {
     return (
         <div className={`max-w-5xl mx-auto px-16 mt-8`}>
             <NavigationWidget 
-                navItems={['Популярное', 'Отзывы', 'Почему мы']} 
+                navItems={['Популярное', 'Отзывы', 'О нас']} 
             />
         </div>
     );
