@@ -1,0 +1,1 @@
+export { useCartSidebar } from './model/useCartSidebar'

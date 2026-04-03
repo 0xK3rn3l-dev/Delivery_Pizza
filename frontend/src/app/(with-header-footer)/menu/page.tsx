@@ -6,8 +6,6 @@ function MenuPage() {
     <div>
       <LogoBanner />
       <Catalog />
-
-
     </div>
   );
 }

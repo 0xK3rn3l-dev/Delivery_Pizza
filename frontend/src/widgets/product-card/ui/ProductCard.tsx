@@ -2,19 +2,17 @@
 
 import { ProductCardProps } from '../model/types';
 import Image from 'next/image';
+import { useCart } from '@/widgets/cart-sidebar/model/CartContext';
 
 interface ProductCardComponentProps {
     product: ProductCardProps;
-    onAddToCart?: (product: ProductCardProps) => void;
 }
 
-export const ProductCard = ({ product, onAddToCart }: ProductCardComponentProps) => {
+export const ProductCard = ({ product }: ProductCardComponentProps) => {
+    const { addToCart } = useCart();
+
     const handleAddToCart = () => {
-        if (onAddToCart) {
-            onAddToCart(product);
-        } else {
-            console.log('Добавлено в корзину:', product);
-        }
+        addToCart(product, 1);
     };
 
     return (
@@ -43,7 +41,6 @@ export const ProductCard = ({ product, onAddToCart }: ProductCardComponentProps)
                     {product.description}
                 </p>
                 
-                {/* Отступ автоматически толкает кнопку вниз */}
                 <div className="flex-grow"></div>
                 
                 <div className="pt-2 flex justify-end">
