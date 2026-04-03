@@ -12,6 +12,7 @@
     "@react-instastories/base": "^1.0.7",
     "@react-instastories/external": "^1.0.7",
     "@react-instastories/presets": "^1.0.7",
+    "lucide-react": "^1.7.0",
     "next": "14.2.5",
     "react": "18.3.1",
     "react-dom": "18.3.1",

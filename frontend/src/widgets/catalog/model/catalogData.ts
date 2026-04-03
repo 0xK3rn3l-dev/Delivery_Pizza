@@ -7,15 +7,15 @@ export const catalogData: ProductCardProps[] = [
         name: "Маргарита",
         description: "Томатный соус, моцарелла, базилик",
         price: 499,
-        imageUrl: "/images/pizza/margarita.jpg",
+        imageUrl: "/images/menu/pizzas/margherita.jpg",
         category: "pizza"
     },
-    {
+    { 
         id: 2,
         name: "Пепперони",
         description: "Томатный соус, пепперони, моцарелла",
         price: 599,
-        imageUrl: "/images/pizza/pepperoni.jpg",
+        imageUrl: "/images/menu/pizzas/pepperoni.jpg",
         category: "pizza"
     },
     {
@@ -23,7 +23,7 @@ export const catalogData: ProductCardProps[] = [
         name: "Гавайская",
         description: "Томатный соус, курица, ананас, моцарелла",
         price: 649,
-        imageUrl: "/images/pizza/hawaiian.jpg",
+        imageUrl: "/images/menu/pizzas/hawaiian.jpg",
         category: "pizza"
     },
     {
@@ -31,7 +31,7 @@ export const catalogData: ProductCardProps[] = [
         name: "Четыре сыра",
         description: "Сливочный соус, моцарелла, пармезан, горгонзола, дорблю",
         price: 699,
-        imageUrl: "/images/pizza/four-cheese.jpg",
+        imageUrl: "/images/menu/pizzas/four-cheese.jpg",
         category: "pizza"
     },
     
@@ -41,7 +41,7 @@ export const catalogData: ProductCardProps[] = [
         name: "Кока-Кола",
         description: "0.5л",
         price: 120,
-        imageUrl: "/images/drinks/coca-cola.jpg",
+        imageUrl: "/images/menu/drinks/coca-cola.jpg",
         category: "drink"
     },
     {
@@ -49,7 +49,7 @@ export const catalogData: ProductCardProps[] = [
         name: "Сок апельсиновый",
         description: "0.5л",
         price: 150,
-        imageUrl: "/images/drinks/orange-juice.jpg",
+        imageUrl: "/images/menu/drinks/juice-orange.jpg",
         category: "drink"
     },
     {
@@ -57,7 +57,7 @@ export const catalogData: ProductCardProps[] = [
         name: "Морс клюквенный",
         description: "0.5л",
         price: 130,
-        imageUrl: "/images/drinks/cranberry-juice.jpg",
+        imageUrl: "/images/menu/drinks/cranberry-juice.jpg",
         category: "drink"
     },
     {
@@ -65,7 +65,7 @@ export const catalogData: ProductCardProps[] = [
         name: "Чай холодный",
         description: "Липтон, 0.5л",
         price: 100,
-        imageUrl: "/images/drinks/ice-tea.jpg",
+        imageUrl: "/images/menu/drinks/ice-tea.jpg",
         category: "drink"
     },
     
@@ -75,7 +75,7 @@ export const catalogData: ProductCardProps[] = [
         name: "Картофель фри",
         description: "Стандартная порция",
         price: 199,
-        imageUrl: "/images/snacks/fries.jpg",
+        imageUrl: "/images/menu/snacks/fries.jpg",
         category: "snack"
     },
     {
@@ -83,7 +83,7 @@ export const catalogData: ProductCardProps[] = [
         name: "Крылышки BBQ",
         description: "6 шт",
         price: 349,
-        imageUrl: "/images/snacks/wings.jpg",
+        imageUrl: "/images/menu/snacks/wings-bbq.jpg",
         category: "snack"
     },
     {
@@ -91,7 +91,7 @@ export const catalogData: ProductCardProps[] = [
         name: "Острый перец",
         description: "Маринованный",
         price: 99,
-        imageUrl: "/images/snacks/peppers.jpg",
+        imageUrl: "/images/menu/snacks/peppers.jpg",
         category: "snack"
     },
     {
@@ -99,7 +99,7 @@ export const catalogData: ProductCardProps[] = [
         name: "Сырные палочки",
         description: "4 шт",
         price: 249,
-        imageUrl: "/images/snacks/cheese-sticks.jpg",
+        imageUrl: "/images/menu/snacks/cheese-sticks.jpg",
         category: "snack"
     },
     
@@ -109,7 +109,7 @@ export const catalogData: ProductCardProps[] = [
         name: "Чесночный соус",
         description: "30мл",
         price: 49,
-        imageUrl: "/images/sauces/garlic.jpg",
+        imageUrl: "/images/menu/sauces/garlic.jpg",
         category: "sauce"
     },
     {
@@ -117,7 +117,7 @@ export const catalogData: ProductCardProps[] = [
         name: "Томатный соус",
         description: "30мл",
         price: 49,
-        imageUrl: "/images/sauces/tomato.jpg",
+        imageUrl: "/images/menu/sauces/tomato-sauce.jpg",
         category: "sauce"
     },
     {
@@ -125,7 +125,7 @@ export const catalogData: ProductCardProps[] = [
         name: "Сырный соус",
         description: "30мл",
         price: 59,
-        imageUrl: "/images/sauces/cheese.jpg",
+        imageUrl: "/images/menu/sauces/cheese-sauce.jpg",
         category: "sauce"
     },
     {
@@ -133,7 +133,7 @@ export const catalogData: ProductCardProps[] = [
         name: "BBQ соус",
         description: "30мл",
         price: 59,
-        imageUrl: "/images/sauces/bbq.jpg",
+        imageUrl: "/images/menu/sauces/bbq-sauce.jpg",
         category: "sauce"
     }
 ];

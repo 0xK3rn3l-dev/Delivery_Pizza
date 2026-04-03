@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { Button } from '@/shared/ui';
 import { LanguageSwitcher } from '@/features/LanguageSwitcher';
 import { ThemeSwitcher } from '@/features/ThemeSwitcher';
+import { CartIcon } from '@/shared/ui/icons/CartIcon';
 
 export const Header = () => {
   return (
@@ -22,12 +23,6 @@ export const Header = () => {
             >
               Наше Меню
             </Link>
-            <Link 
-              href="/cart" 
-              className="text-gray-700 hover:text-orange-500 transition font-semibold text-base"
-            >
-              Корзина
-            </Link>
 
             <Link 
               href="/delivery" 
@@ -35,13 +30,29 @@ export const Header = () => {
             >
               Доставка
             </Link>
-
+          
           </nav>
           
-          {/* Кнопка входа */}
-          <Button variant="primary" size="md">
-            Войти
-          </Button>
+
+          {/* Кнопки */}
+          <div className="flex items-center gap-3">
+            {/* Круглая кнопка корзины */}
+            <Button 
+              variant="outline" 
+              size="sm"
+              className="rounded-full w-10 h-10 p-0 flex items-center justify-center hover:bg-orange-500 hover:text-white hover:border-orange-500 transition-all duration-300"
+            >
+              <CartIcon className="h-5 w-5" />
+              <span className="sr-only">Корзина</span>
+            </Button>
+
+            {/* Кнопка входа */}
+            <Button variant="primary" size="md">
+              Войти
+            </Button>
+          </div>
+        
+        
         </div>
       </div>
     </header>
