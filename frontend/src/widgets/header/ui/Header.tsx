@@ -64,11 +64,14 @@ export const Header = () => {
                                     </span>
                                 )}
                             </div>
-
+                            
+                        <Link href="/auth/login">
                             {/* Кнопка входа */}
                             <Button variant="primary" size="md">
                                 Войти
                             </Button>
+                        </Link>
+                        
                         </div>
                     </div>
                 </div>
