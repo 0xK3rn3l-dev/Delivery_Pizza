@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { ProductCardProps } from '@/widgets/product-card/model/types';
 
 export interface CartItem extends ProductCardProps {
@@ -10,39 +10,55 @@ export interface CartItem extends ProductCardProps {
 export const useCartSidebar = () => {
     const [items, setItems] = useState<CartItem[]>([]);
     const [isOpen, setIsOpen] = useState(false);
+    const [isLoading, setIsLoading] = useState(true);
 
-    // Загрузка корзины из localStorage при монтировании
+
+
+    // ✅ Загружаем корзину один раз при монтировании
     useEffect(() => {
-        const savedCart = localStorage.getItem('cart');
-        if (savedCart) {
+        const loadCart = () => {
             try {
-                setItems(JSON.parse(savedCart));
-            } catch (e) {
-                console.error('Failed to parse cart:', e);
+                const savedCart = localStorage.getItem('cart');
+                if (savedCart) {
+                    const parsedCart = JSON.parse(savedCart);
+                    if (Array.isArray(parsedCart)) {
+                        setItems(parsedCart);
+                    }
+                }
+            } catch (error) {
+                console.error('Failed to load cart:', error);
+            } finally {
+                setIsLoading(false);
             }
-        }
-    }, []);
+        };
 
-    // Сохранение корзины в localStorage при изменении
+        loadCart();
+    }, []); // Пустой массив - выполняется один раз
+
+
+    // ✅ Сохраняем при каждом изменении (но не во время загрузки)
     useEffect(() => {
-        localStorage.setItem('cart', JSON.stringify(items));
-    }, [items]);
+        if (!isLoading) {
+            localStorage.setItem('cart', JSON.stringify(items));
+        }
+    }, [items, isLoading]);
 
-    // Управление прокруткой фона при открытии/закрытии корзины
+
+
+    // lock back scroll
     useEffect(() => {
         if (isOpen) {
             document.body.style.overflow = 'hidden';
         } else {
             document.body.style.overflow = '';
         }
-
         return () => {
             document.body.style.overflow = '';
         };
     }, [isOpen]);
 
-    // Добавление товара в корзину
-    const addToCart = (product: ProductCardProps, quantity: number = 1) => {
+
+    const addToCart = useCallback((product: ProductCardProps, quantity: number = 1) => {
         setItems(prevItems => {
             const existingItem = prevItems.find(item => item.id === product.id);
             
@@ -52,16 +68,15 @@ export const useCartSidebar = () => {
                         ? { ...item, quantity: item.quantity + quantity }
                         : item
                 );
-            } else {
-                return [...prevItems, { ...product, quantity }];
             }
+            return [...prevItems, { ...product, quantity }];
         });
-    };
+    }, []);
 
-    // Обновление количества товара
-    const updateQuantity = (id: number, quantity: number) => {
+
+    const updateQuantity = useCallback((id: number, quantity: number) => {
         if (quantity <= 0) {
-            removeItem(id);
+            setItems(prevItems => prevItems.filter(item => item.id !== id));
             return;
         }
         
@@ -70,27 +85,26 @@ export const useCartSidebar = () => {
                 item.id === id ? { ...item, quantity } : item
             )
         );
-    };
+    }, []);
 
-    // Удаление товара из корзины
-    const removeItem = (id: number) => {
+
+    const removeItem = useCallback((id: number) => {
         setItems(prevItems => prevItems.filter(item => item.id !== id));
-    };
+    }, []);
 
-    // Очистка корзины
-    const clearCart = () => {
+
+    const clearCart = useCallback(() => {
         setItems([]);
-    };
+        localStorage.removeItem('cart');
+    }, []);
 
-    // Открыть/закрыть корзину
-    const openCart = () => setIsOpen(true);
-    const closeCart = () => setIsOpen(false);
-    const toggleCart = () => setIsOpen(prev => !prev);
 
-    // Подсчет общей суммы
+
+    const openCart = useCallback(() => setIsOpen(true), []);
+    const closeCart = useCallback(() => setIsOpen(false), []);
+    const toggleCart = useCallback(() => setIsOpen(prev => !prev), []);
+
     const totalPrice = items.reduce((sum, item) => sum + item.price * item.quantity, 0);
-    
-    // Подсчет общего количества товаров
     const totalItems = items.reduce((sum, item) => sum + item.quantity, 0);
 
     return {
@@ -98,6 +112,7 @@ export const useCartSidebar = () => {
         isOpen,
         totalPrice,
         totalItems,
+        isLoading,
         addToCart,
         updateQuantity,
         removeItem,
