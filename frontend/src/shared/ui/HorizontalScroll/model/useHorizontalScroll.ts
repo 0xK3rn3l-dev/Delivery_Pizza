@@ -1,35 +1,37 @@
-'use client';
+// shared/ui/HorizontalScroll/model/useHorizontalScroll.ts
+import { useRef, useState, useEffect, useCallback } from 'react';
 
-import { useRef, useState, useEffect } from 'react';
+interface UseHorizontalScrollProps {
+  scrollAmount?: number;
+}
 
-export const useReviewsScroll = () => {
+export const useHorizontalScroll = ({ scrollAmount = 500 }: UseHorizontalScrollProps = {}) => {
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const [showLeftButton, setShowLeftButton] = useState(false);
   const [showRightButton, setShowRightButton] = useState(false);
 
-  const checkScrollButtons = () => {
+  const checkScrollButtons = useCallback(() => {
     const container = scrollContainerRef.current;
     if (!container) return;
 
     const { scrollLeft, scrollWidth, clientWidth } = container;
-    setShowLeftButton(scrollLeft > 0);
-    setShowRightButton(scrollLeft + clientWidth < scrollWidth - 10);
-  };
+    setShowLeftButton(scrollLeft > 20);
+    setShowRightButton(scrollLeft + clientWidth < scrollWidth - 20);
+  }, []);
 
-  const scroll = (direction: 'left' | 'right') => {
+  const scroll = useCallback((direction: 'left' | 'right') => {
     const container = scrollContainerRef.current;
     if (!container) return;
 
-    const scrollAmount = 500;
-    const newScrollLeft = direction === 'left' 
-      ? container.scrollLeft - scrollAmount 
+    const scrollPosition = direction === 'left' 
+      ? container.scrollLeft - scrollAmount
       : container.scrollLeft + scrollAmount;
 
     container.scrollTo({
-      left: newScrollLeft,
-      behavior: 'smooth'
+      left: scrollPosition,
+      behavior: 'smooth',
     });
-  };
+  }, [scrollAmount]);
 
   useEffect(() => {
     const container = scrollContainerRef.current;
@@ -43,7 +45,13 @@ export const useReviewsScroll = () => {
       container.removeEventListener('scroll', checkScrollButtons);
       window.removeEventListener('resize', checkScrollButtons);
     };
-  }, []);
+  }, [checkScrollButtons]);
 
-  return { scrollContainerRef, showLeftButton, showRightButton, scroll };
+  return {
+    scrollContainerRef,
+    showLeftButton,
+    showRightButton,
+    scroll,
+    checkScrollButtons,
+  };
 };

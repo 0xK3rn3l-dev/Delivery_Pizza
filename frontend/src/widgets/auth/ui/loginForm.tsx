@@ -10,7 +10,7 @@ import { GoogleIcon } from '@/shared/assets/icons/google'
 import { GitHubIcon } from '@/shared/assets/icons/github'
 
 import { useLoginForm } from '../model/useLoginForm';
-
+  
 
 export function LoginForm() {
     return (

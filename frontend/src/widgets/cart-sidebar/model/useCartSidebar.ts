@@ -14,7 +14,6 @@ export const useCartSidebar = () => {
 
 
 
-    // ✅ Загружаем корзину один раз при монтировании
     useEffect(() => {
         const loadCart = () => {
             try {
@@ -33,16 +32,14 @@ export const useCartSidebar = () => {
         };
 
         loadCart();
-    }, []); // Пустой массив - выполняется один раз
+    }, []);
 
 
-    // ✅ Сохраняем при каждом изменении (но не во время загрузки)
     useEffect(() => {
         if (!isLoading) {
             localStorage.setItem('cart', JSON.stringify(items));
         }
     }, [items, isLoading]);
-
 
 
     // lock back scroll
@@ -58,6 +55,7 @@ export const useCartSidebar = () => {
     }, [isOpen]);
 
 
+    
     const addToCart = useCallback((product: ProductCardProps, quantity: number = 1) => {
         setItems(prevItems => {
             const existingItem = prevItems.find(item => item.id === product.id);
