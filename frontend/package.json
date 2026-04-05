@@ -9,6 +9,7 @@
     "lint": "eslint"
   },
   "dependencies": {
+    "@pbe/react-yandex-maps": "^1.2.5",
     "@react-instastories/base": "^1.0.7",
     "@react-instastories/external": "^1.0.7",
     "@react-instastories/presets": "^1.0.7",

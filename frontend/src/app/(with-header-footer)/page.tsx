@@ -11,9 +11,19 @@ function HomePage() {
                 <PromoLogo />
                 <MainNavigationWidget />
                 <PromoBanner />
-                <PopularPizza />
-                <Reviews />
-                <WhyWe />
+
+                <section id="popular" className="scroll-mt-20">
+                    <PopularPizza />
+                </section>
+                
+                <section id="reviews" className="scroll-mt-20">
+                    <Reviews />
+                </section>
+                
+                <section id="about" className="scroll-mt-20">
+                    <WhyWe />
+                </section>
+
         </div>
     )
 }
