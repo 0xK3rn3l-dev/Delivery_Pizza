@@ -30,7 +30,7 @@ export const PromoLogo = () => {
       </div>
     </div>
     
-    <CitySelector onCityChange={(city) => {}} />
+    <CitySelector />
 
   </div>
 </section>

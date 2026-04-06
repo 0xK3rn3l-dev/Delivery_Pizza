@@ -1,11 +1,11 @@
 'use client';
 
 import { useState } from 'react';
-import { HorizontalScroll } from '@/shared/ui/HorizontalScroll/HorizontalScroll';
-import { storyCards } from '../model/cards';
+import { HorizontalScroll } from '@/shared/ui/horizontalScroll/HorizontalScroll';
+import { storyCards } from '@/shared/api/data-StoryCard';
+import { StoryCard } from '../model/interfaces';
 import { PromoCardItem } from './PromoCardItem';
 import { StoryViewer } from './StoryViewer';
-import { StoryCard } from '../model/types';
 
 export const PromoBanner = () => {
   const [activeCard, setActiveCard] = useState<StoryCard | null>(null);

@@ -1,6 +1,6 @@
 'use client';
 
-import { StoryCard } from "../model/types";
+import { StoryCard } from "../model/interfaces";
 import { StoryPageView } from "./StoryPage";
 import { useStoryViewer } from "../model/useStoryViewer";
 

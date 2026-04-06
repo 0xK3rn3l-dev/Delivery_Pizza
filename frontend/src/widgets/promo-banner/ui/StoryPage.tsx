@@ -1,6 +1,6 @@
 
 
-import { StoryCard, StoryPage } from "../model/types";
+import { StoryCard, StoryPage } from "../model/interfaces";
 import { useStoryAction } from '@/features/story-actions';
 
 

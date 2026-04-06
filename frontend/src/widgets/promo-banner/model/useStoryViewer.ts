@@ -1,6 +1,6 @@
 'use client';
 
-import { StoryCard } from "./types";
+import { StoryCard } from "./interfaces";
 import { useState, useEffect } from "react";
 
 

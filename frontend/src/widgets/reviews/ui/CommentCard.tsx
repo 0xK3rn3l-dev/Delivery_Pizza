@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from "react";
-import { Comment } from "../model/types";
+import { Comment } from "../model/interfaces";
 import { ReviewModal } from "./ReviewModal";
 
 interface CommentCardProps {

@@ -1,2 +1,2 @@
 export { Reviews } from "./ui/ReviewsBox";
-export type { Comment, CommentProps } from "./model/types";
+export type { Comment, CommentProps } from "./model/interfaces";

@@ -1,4 +1,4 @@
-import { Comment } from "./types";
+import { Comment } from '@/widgets/reviews/model/interfaces';
 
 export const comments: Comment[] = [
   {

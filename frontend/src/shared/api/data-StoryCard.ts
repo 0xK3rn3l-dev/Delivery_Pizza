@@ -1,4 +1,4 @@
-import { StoryCard } from './types';
+import { StoryCard } from '@/widgets/promo-banner/model/interfaces';
 import { createLinkAction, createButtonAction } from '@/features/story-actions';
  
 export const storyCards: StoryCard[] = [

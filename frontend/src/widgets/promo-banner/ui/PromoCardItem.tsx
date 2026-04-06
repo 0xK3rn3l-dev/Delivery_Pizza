@@ -2,8 +2,8 @@
 'use client';
 
 import Image from 'next/image';
-import { StoryCard } from '../model/types';
-
+import { StoryCard } from '@/widgets/promo-banner/model/interfaces';
+ 
 interface PromoCardItemProps {
   card: StoryCard;
   onClick: () => void;

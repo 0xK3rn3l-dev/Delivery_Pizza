@@ -2,7 +2,7 @@
 
 import { Button } from '@/shared/ui/button';
 import { useLanguage } from '../model/useLanguage';
-import { PlanetIcon } from '@/shared/ui/icons'; 
+import { PlanetIcon } from '@/shared/assets/icons'; 
 
 interface LanguageSwitcherProps {
   className?: string;

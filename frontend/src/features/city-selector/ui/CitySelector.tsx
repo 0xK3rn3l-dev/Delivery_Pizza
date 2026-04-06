@@ -2,8 +2,8 @@
 
 import { Button } from '@/shared/ui/button';
 import { useCity } from '../model/useCity';
-import { City } from '../model/constants';
-import { LocationIcon, ChevronIcon } from '@/shared/ui/icons'; 
+import { LocationIcon, ChevronIcon } from '@/shared/assets/icons'; 
+import { City, CITIES } from '@/shared/config/interfaces/cities';
 
 interface CitySelectorProps {
     onCityChange?: (city: City) => void;
@@ -14,7 +14,6 @@ export const CitySelector = ({ onCityChange, className = '' }: CitySelectorProps
     const {
         city,
         isOpen,
-        cities,
         handleCitySelect,
         toggleOpen,
         closeDropdown,
@@ -29,7 +28,7 @@ export const CitySelector = ({ onCityChange, className = '' }: CitySelectorProps
                 className="flex items-center gap-2 hover:bg-gray-50 transition-all duration-300"
             >
                 <LocationIcon />
-                <span>{city}</span>
+                <span>{city.name}</span>
                 <ChevronIcon isOpen={isOpen} />
             </Button>
             
@@ -40,9 +39,9 @@ export const CitySelector = ({ onCityChange, className = '' }: CitySelectorProps
                         onClick={closeDropdown} 
                     />
                     <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 py-2 z-50">
-                        {cities.map((c) => (
+                        {CITIES.map((c) => (
                             <button
-                                key={c}
+                                key={c.id}
                                 onClick={() => handleCitySelect(c)}
                                 className={`
                                     block w-full text-left px-4 py-2 text-sm 
@@ -53,7 +52,7 @@ export const CitySelector = ({ onCityChange, className = '' }: CitySelectorProps
                                     }
                                 `}
                             >
-                                {c}
+                                {c.name}
                             </button>
                         ))}
                     </div>

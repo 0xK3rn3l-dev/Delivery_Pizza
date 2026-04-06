@@ -1,7 +1,7 @@
 // Ваш компонент Reviews становится чище:
-import { HorizontalScroll } from '@/shared/ui/HorizontalScroll/HorizontalScroll';
+import { HorizontalScroll } from '@/shared/ui/horizontalScroll/HorizontalScroll';
 import { CommentCard } from "./CommentCard";
-import { comments } from "../model/comments";
+import { comments } from '@/shared/api/data-Comments'
 
 export const Reviews = () => {
   return (

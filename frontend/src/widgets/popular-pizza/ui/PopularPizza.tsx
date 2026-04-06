@@ -2,7 +2,7 @@
 
 import { usePopularPizza } from '../model/usePopularPizza';
 import { PizzaCard } from './PizzaCard';
-import { PopularPizzaProps } from '../model/types';
+import { PopularPizzaProps } from '../model/interfaces';
 
 export const PopularPizza = ({ title = 'Популярное', className = '' }: PopularPizzaProps) => {
     const { pizzas, isLoading, error } = usePopularPizza();

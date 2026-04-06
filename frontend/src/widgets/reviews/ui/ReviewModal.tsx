@@ -1,7 +1,6 @@
 'use client';
 
-import { Comment } from "../model/types";
-import { useEffect } from "react";
+import { Comment } from "../model/interfaces";
 
 interface ReviewModalProps {
   comment: Comment | null;

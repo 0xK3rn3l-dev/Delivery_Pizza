@@ -1,4 +1,3 @@
-// shared/ui/HorizontalScroll/HorizontalScroll.tsx
 'use client';
 
 import { ReactNode } from 'react';

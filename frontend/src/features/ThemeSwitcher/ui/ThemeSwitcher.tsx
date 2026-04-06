@@ -2,7 +2,7 @@
 
 import { Button } from '@/shared/ui/button';
 import { useTheme } from '../model/useTheme';
-import { SunIcon, MoonIcon } from '@/shared/ui/icons';
+import { SunIcon, MoonIcon } from '@/shared/assets/icons';
 
 interface ThemeSwitcherProps {
   className?: string;

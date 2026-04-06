@@ -1,4 +1,4 @@
-export interface Pizza {
+export interface PopularPizza {
     id: number;
     name: string;
     description?: string;

@@ -1,7 +1,8 @@
+// src/shared/ui/button/Button.tsx
 'use client';
 
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-  variant?: 'primary' | 'secondary' | 'outline';
+  variant?: 'primary' | 'secondary' | 'outline' | 'outlineDark';
   size?: 'sm' | 'md' | 'lg';
   children: React.ReactNode;
 }
@@ -17,6 +18,7 @@ export const Button = ({
     primary: 'bg-orange-500 text-white hover:bg-orange-600 hover:text-white',
     secondary: 'bg-gray-500 text-white hover:bg-gray-600',
     outline: 'border border-orange-500 text-orange-500 hover:bg-orange-50',
+    outlineDark: 'border border-gray-700 bg-gray-800/50 text-gray-300 hover:bg-gray-700 hover:text-white',
   };
   
   const sizes = {
@@ -27,7 +29,11 @@ export const Button = ({
   
   return (
     <button
-      className={`rounded-3xl transition ${variants[variant]} ${sizes[size]} ${className}`}
+      className={`
+        rounded-3xl transition 
+        inline-flex items-center justify-center 
+        ${variants[variant]} ${sizes[size]} ${className}
+      `}
       {...props}
     >
       {children}

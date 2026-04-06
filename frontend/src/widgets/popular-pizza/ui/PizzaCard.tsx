@@ -1,16 +1,15 @@
 'use client';
 
 import Image from 'next/image';
-import { Pizza } from '../model/types';
-import { escapeHtml } from '@/shared/lib';
+import { PopularPizza } from '../model/interfaces';
 
 interface PizzaCardProps {
-    pizza: Pizza;
-    onAddToCart?: (pizza: Pizza) => void;
+    pizza: PopularPizza;
+    onAddToCart?: (pizza: PopularPizza) => void;
 }
 
 export const PizzaCard = ({ pizza, onAddToCart }: PizzaCardProps) => {
-    const safeName = escapeHtml(pizza.name);
+    const safeName = (pizza.name);
     const safePrice = pizza.price;
     
     return (
@@ -27,7 +26,7 @@ export const PizzaCard = ({ pizza, onAddToCart }: PizzaCardProps) => {
                 />
                 {pizza.rating && (
                     <div className="absolute top-2 right-2 bg-orange-500 text-white px-2 py-1 rounded-lg text-sm font-semibold">
-                        ★ {escapeHtml(String(pizza.rating))}
+                        ★ {(String(pizza.rating))}
                     </div>
                 )}
             </div>

@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { Button } from '@/shared/ui';
 import { LanguageSwitcher } from '@/features/LanguageSwitcher';
 import { ThemeSwitcher } from '@/features/ThemeSwitcher';
-import { CartIcon } from '@/shared/ui/icons/CartIcon';
+import { CartIcon } from '@/shared/assets/icons/CartIcon';
 import { CartSidebar } from '@/widgets/cart-sidebar/ui/CartSidebar';
 import { useCart } from '@/widgets/cart-sidebar/model/CartContext';
 
