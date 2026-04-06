@@ -33,14 +33,69 @@ interface DeliveryTime {
   nearestPizzeria: string;
 }
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 export const DeliveryWidget = () => {
   const [selectedAddress, setSelectedAddress] = useState<Address | null>(null);
   const [recentAddresses, setRecentAddresses] = useState<Address[]>([]);
+  const [previewAddress, setPreviewAddress] = useState<Address | null>(null);
+  
+  const [isPreviewAddress, setIsPreviewAddress] = useState(false); 
+  const [isSearching, setIsSearching] = useState(false);
+  
   const [searchQuery, setSearchQuery] = useState('');
   const [searchResults, setSearchResults] = useState<Address[]>([]);
-  const [isSearching, setIsSearching] = useState(false);
+
+
+
+
+
+
+
+
+
+
+
+
+
   const [deliveryTime, setDeliveryTime] = useState<DeliveryTime | null>(null);
   const [mapCenter, setMapCenter] = useState<[number, number]>([55.751244, 37.618423]);
+
+
+
+
+  
+
+  
+
+
+
+
+
+
+
+
 
   // Load data from localStorage on mount
   useEffect(() => {
@@ -72,6 +127,13 @@ export const DeliveryWidget = () => {
       localStorage.removeItem('recentDeliveryAddresses');
     }
   }, [recentAddresses]);
+
+
+
+
+
+
+
 
   // Geocoding function
   const searchAddress = async (query: string) => {
@@ -148,6 +210,24 @@ export const DeliveryWidget = () => {
     return R * c;
   };
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
   const handleClearRecentAddresses = () => {
     if (confirm('Вы уверены, что хотите очистить историю недавних адресов?')) {
       setRecentAddresses([]);
@@ -159,35 +239,79 @@ export const DeliveryWidget = () => {
     setRecentAddresses(recentAddresses.filter(addr => addr.id !== addressId));
   };
 
-  const handleSelectAddress = (address: Address) => {
-    setSelectedAddress(address);
+
+
+
+
+  const handlePreviewAddress = (address: Address) => {
+    setPreviewAddress(address);
+    setIsPreviewAddress(true);  // 👈 Включаем режим предпросмотра
     setMapCenter([address.lat, address.lng]);
-    calculateDeliveryTime(address.lat, address.lng);
-    
-    const existingIndex = recentAddresses.findIndex(a => a.address === address.address);
-    let updatedRecent;
-    
-    if (existingIndex !== -1) {
-      updatedRecent = [
-        address,
-        ...recentAddresses.filter((_, i) => i !== existingIndex)
-      ];
-    } else {
-      updatedRecent = [address, ...recentAddresses].slice(0, 4);
-    }
-    
-    setRecentAddresses(updatedRecent);
     setSearchQuery('');
     setSearchResults([]);
   };
 
+  const handlePreviewRecentAddress = (address: Address) => {
+    setPreviewAddress(address);
+    setIsPreviewAddress(true);  // 👈 Включаем режим предпросмотра
+    setMapCenter([address.lat, address.lng]);
+  };
+
+
   const handleConfirmAddress = () => {
-    if (selectedAddress) {
-      alert(`Адрес доставки сохранен: ${selectedAddress.address}\nВремя доставки: ${deliveryTime?.duration} минут`);
+    if (previewAddress && isPreviewAddress) {
+      setSelectedAddress(previewAddress);
+      calculateDeliveryTime(previewAddress.lat, previewAddress.lng);
+      
+      // Обновляем недавние адреса
+      const existingIndex = recentAddresses.findIndex(a => a.address === previewAddress.address);
+      let updatedRecent;
+      
+      if (existingIndex !== -1) {
+        updatedRecent = [
+          previewAddress,
+          ...recentAddresses.filter((_, i) => i !== existingIndex)
+        ];
+      } else {
+        updatedRecent = [previewAddress, ...recentAddresses].slice(0, 4);
+      }
+
+      setRecentAddresses(updatedRecent);
+      setIsPreviewAddress(false);
+      alert(`Адрес доставки сохранен: ${previewAddress.address}\nВремя доставки: ${deliveryTime?.duration} минут`);
+    } else if (selectedAddress) {
+      alert(`Адрес уже выбран: ${selectedAddress.address}`);
     } else {
-      alert('Пожалуйста, выберите адрес доставки');
+      alert('Пожалуйста, выберите адрес из поиска или недавних');
     }
   };
+
+
+  const handleCancelPreview = () => {
+    setPreviewAddress(null);
+    setIsPreviewAddress(false);
+    if (selectedAddress) {
+      setMapCenter([selectedAddress.lat, selectedAddress.lng]);
+    } else {
+      setMapCenter([55.751244, 37.618423]);
+    }
+  };
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
   return (
     <div className="max-w-6xl mx-auto p-4">
@@ -198,7 +322,7 @@ export const DeliveryWidget = () => {
         <div className="order-2 lg:order-1">
           <div className="bg-white rounded-lg shadow-md overflow-hidden">
             <div className="h-96">
-              <ClientMap center={mapCenter} selectedAddress={selectedAddress} />
+              <ClientMap center={mapCenter} selectedAddress={previewAddress || selectedAddress} />
             </div>
             
             {/* Delivery time info */}
@@ -237,6 +361,9 @@ export const DeliveryWidget = () => {
               </button>
             </div>
 
+
+
+
             {/* Search results */}
             {searchResults.length > 0 && (
               <div className="mb-4">
@@ -245,8 +372,10 @@ export const DeliveryWidget = () => {
                   {searchResults.map((result) => (
                     <button
                       key={result.id}
-                      onClick={() => handleSelectAddress(result)}
-                      className="w-full text-left p-3 border rounded-lg hover:bg-gray-50 transition"
+                      onClick={() => handlePreviewAddress(result)}
+                      className={`w-full text-left p-3 border rounded-lg hover:bg-gray-50 transition ${
+                        previewAddress?.id === result.id ? 'border-blue-500 bg-blue-50' : ''
+                      }`}
                     >
                       <p className="text-sm">{result.address}</p>
                     </button>
@@ -254,6 +383,8 @@ export const DeliveryWidget = () => {
                 </div>
               </div>
             )}
+
+
 
             {/* Recent addresses */}
             {recentAddresses.length > 0 && !searchResults.length && (
@@ -271,8 +402,10 @@ export const DeliveryWidget = () => {
                   {recentAddresses.map((address) => (
                     <div key={address.id} className="relative group">
                       <button
-                        onClick={() => handleSelectAddress(address)}
-                        className="w-full text-left p-3 border rounded-lg hover:bg-gray-50 transition pr-10"
+                        onClick={() => handlePreviewRecentAddress(address)}
+                        className={`w-full text-left p-3 border rounded-lg hover:bg-gray-50 transition pr-10 ${
+                          previewAddress?.id === address.id ? 'border-blue-500 bg-blue-50' : ''
+                        }`}
                       >
                         <p className="text-sm">{address.address}</p>
                       </button>
@@ -291,13 +424,38 @@ export const DeliveryWidget = () => {
               </div>
             )}
 
+
+
+            {/* Preview address display - только если в режиме предпросмотра */}
+            {isPreviewAddress && previewAddress && (
+              <div className="mb-4 p-3 bg-yellow-50 rounded-lg border border-yellow-200">
+                <div className="flex justify-between items-start">
+                  <div className="flex-1">
+                    <h3 className="font-semibold mb-1 text-yellow-800">Подтвердить адрес:</h3>
+                    <p className="text-sm text-gray-700">{previewAddress.address}</p>
+                    <p className="text-xs text-yellow-600 mt-1">⚠️ Нажмите "Подтвердить", чтобы сохранить</p>
+                  </div>
+                  <button
+                    onClick={handleCancelPreview}
+                    className="text-gray-400 hover:text-gray-600"
+                  >
+                    ✕
+                  </button>
+                </div>
+              </div>
+            )}
+
+
+
             {/* Selected address display */}
-            {selectedAddress && (
-              <div className="mb-4 p-3 bg-blue-50 rounded-lg border border-blue-200">
-                <h3 className="font-semibold mb-1">Выбранный адрес:</h3>
+            {selectedAddress && !isPreviewAddress && (
+              <div className="mb-4 p-3 bg-green-50 rounded-lg border border-green-200">
+                <h3 className="font-semibold mb-1 text-green-800">✅ Выбранный адрес:</h3>
                 <p className="text-sm text-gray-700">{selectedAddress.address}</p>
               </div>
             )}
+
+
 
             {/* Confirm button */}
             <button
@@ -306,6 +464,16 @@ export const DeliveryWidget = () => {
             >
               Подтвердить адрес доставки
             </button>
+
+            {/* Cancel button - показываем только в режиме предпросмотра */}
+            {isPreviewAddress && (
+              <button
+                onClick={handleCancelPreview}
+                className="w-full mt-2 bg-gray-300 text-gray-700 py-2 rounded-lg hover:bg-gray-400 transition font-semibold"
+              >
+                Отмена
+              </button>
+            )}
           </div>
         </div>
       </div>
