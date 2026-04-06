@@ -1,26 +1,23 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { MapContainer, TileLayer, Marker, useMap } from 'react-leaflet';
-import L from 'leaflet';
-import 'leaflet/dist/leaflet.css';
+import dynamic from 'next/dynamic';
 
-// Fix for default marker icons in Leaflet with Next.js
-delete (L.Icon.Default.prototype as any)._getIconUrl;
-L.Icon.Default.mergeOptions({
-  iconRetinaUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon-2x.png',
-  iconUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon.png',
-  shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png',
-});
+// Импортируйте тип пропсов (экспортируйте его из ClientMap)
+import type { ClientMapProps } from './ClientMap';
 
-// Component to update map view when address changes
-const MapUpdater = ({ center }: { center: [number, number] }) => {
-  const map = useMap();
-  useEffect(() => {
-    map.setView(center, 15);
-  }, [center, map]);
-  return null;
-};
+// Динамический импорт карты с правильными типами
+const ClientMap = dynamic<ClientMapProps>(
+  () => import('./ClientMap').then((mod) => mod.ClientMap),
+  { 
+    ssr: false,
+    loading: () => (
+      <div className="h-full w-full bg-gray-100 flex items-center justify-center">
+        <div className="text-gray-500">Загрузка карты...</div>
+      </div>
+    )
+  }
+);
 
 interface Address {
   id: string;
@@ -31,8 +28,8 @@ interface Address {
 }
 
 interface DeliveryTime {
-  duration: number; // in minutes
-  distance: number; // in km
+  duration: number;
+  distance: number;
   nearestPizzeria: string;
 }
 
@@ -43,7 +40,7 @@ export const DeliveryWidget = () => {
   const [searchResults, setSearchResults] = useState<Address[]>([]);
   const [isSearching, setIsSearching] = useState(false);
   const [deliveryTime, setDeliveryTime] = useState<DeliveryTime | null>(null);
-  const [mapCenter, setMapCenter] = useState<[number, number]>([55.751244, 37.618423]); // Moscow center
+  const [mapCenter, setMapCenter] = useState<[number, number]>([55.751244, 37.618423]);
 
   // Load data from localStorage on mount
   useEffect(() => {
@@ -51,7 +48,9 @@ export const DeliveryWidget = () => {
     const savedRecent = localStorage.getItem('recentDeliveryAddresses');
     
     if (savedAddress) {
-      setSelectedAddress(JSON.parse(savedAddress));
+      const parsed = JSON.parse(savedAddress);
+      setSelectedAddress(parsed);
+      setMapCenter([parsed.lat, parsed.lng]);
     }
     
     if (savedRecent) {
@@ -70,12 +69,11 @@ export const DeliveryWidget = () => {
     if (recentAddresses.length > 0) {
       localStorage.setItem('recentDeliveryAddresses', JSON.stringify(recentAddresses));
     } else {
-      // If recent addresses are empty, remove from localStorage
       localStorage.removeItem('recentDeliveryAddresses');
     }
   }, [recentAddresses]);
 
-  // Geocoding function (using Nominatim - free, but rate limited)
+  // Geocoding function
   const searchAddress = async (query: string) => {
     if (!query.trim()) return;
     
@@ -97,7 +95,6 @@ export const DeliveryWidget = () => {
       setSearchResults(results);
     } catch (error) {
       console.error('Error searching address:', error);
-      // Fallback mock data for demo
       setSearchResults([
         {
           id: '1',
@@ -112,16 +109,14 @@ export const DeliveryWidget = () => {
     }
   };
 
-  // Calculate delivery time and nearest pizzeria
+  // Calculate delivery time
   const calculateDeliveryTime = (lat: number, lng: number) => {
-    // Mock pizzerias in Moscow
     const pizzerias = [
       { name: 'Pizza House Central', lat: 55.7558, lng: 37.6176 },
       { name: 'Pizza Express Arbat', lat: 55.7522, lng: 37.6006 },
       { name: 'Pizza Roma Tverskaya', lat: 55.7646, lng: 37.6056 },
     ];
 
-    // Calculate distances and find nearest pizzeria
     let nearest = pizzerias[0];
     let minDistance = calculateDistance(lat, lng, nearest.lat, nearest.lng);
 
@@ -133,7 +128,6 @@ export const DeliveryWidget = () => {
       }
     });
 
-    // Calculate delivery time (1 minute per 200m + 15 minutes preparation)
     const duration = Math.round(minDistance * 1000 / 200) + 15;
     
     setDeliveryTime({
@@ -143,9 +137,8 @@ export const DeliveryWidget = () => {
     });
   };
 
-  // Haversine formula to calculate distance between two points
   const calculateDistance = (lat1: number, lon1: number, lat2: number, lon2: number): number => {
-    const R = 6371; // Earth's radius in km
+    const R = 6371;
     const dLat = (lat2 - lat1) * Math.PI / 180;
     const dLon = (lon2 - lon1) * Math.PI / 180;
     const a = Math.sin(dLat/2) * Math.sin(dLat/2) +
@@ -155,16 +148,14 @@ export const DeliveryWidget = () => {
     return R * c;
   };
 
-  // Clear all recent addresses
   const handleClearRecentAddresses = () => {
     if (confirm('Вы уверены, что хотите очистить историю недавних адресов?')) {
       setRecentAddresses([]);
     }
   };
 
-  // Remove single address from recent list
   const handleRemoveRecentAddress = (addressId: string, e: React.MouseEvent) => {
-    e.stopPropagation(); // Prevent selecting the address when clicking remove
+    e.stopPropagation();
     setRecentAddresses(recentAddresses.filter(addr => addr.id !== addressId));
   };
 
@@ -173,18 +164,15 @@ export const DeliveryWidget = () => {
     setMapCenter([address.lat, address.lng]);
     calculateDeliveryTime(address.lat, address.lng);
     
-    // Update recent addresses
     const existingIndex = recentAddresses.findIndex(a => a.address === address.address);
     let updatedRecent;
     
     if (existingIndex !== -1) {
-      // Move existing address to front
       updatedRecent = [
         address,
         ...recentAddresses.filter((_, i) => i !== existingIndex)
       ];
     } else {
-      // Add new address to front, keep only last 4
       updatedRecent = [address, ...recentAddresses].slice(0, 4);
     }
     
@@ -210,20 +198,7 @@ export const DeliveryWidget = () => {
         <div className="order-2 lg:order-1">
           <div className="bg-white rounded-lg shadow-md overflow-hidden">
             <div className="h-96">
-              <MapContainer
-                center={mapCenter}
-                zoom={15}
-                style={{ height: '100%', width: '100%' }}
-              >
-                <TileLayer
-                  url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                  attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-                />
-                {selectedAddress && (
-                  <Marker position={[selectedAddress.lat, selectedAddress.lng]} />
-                )}
-                <MapUpdater center={mapCenter} />
-              </MapContainer>
+              <ClientMap center={mapCenter} selectedAddress={selectedAddress} />
             </div>
             
             {/* Delivery time info */}

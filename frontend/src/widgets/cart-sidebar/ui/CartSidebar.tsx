@@ -31,20 +31,33 @@ export const CartSidebar = ({
 
     return (
         <>
-            {/* Затемнение фона */}
+            {/* Затемнение для всего */}
             <div 
-                className={`fixed inset-0 bg-black/50 backdrop-blur-sm transition-all duration-300 z-50 ${
+                className={`fixed inset-0 transition-all duration-300 ${
                     isOpen ? 'opacity-100 visible' : 'opacity-0 invisible'
                 }`}
+                style={{ 
+                    zIndex: 2000,
+                    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+                    backdropFilter: 'blur(8px)',
+                    pointerEvents: isOpen ? 'auto' : 'none'
+                }}
                 onClick={onClose}
             />
-            
-            {/* Боковая панель корзины */}
+
+
+            {/* Корзина - поверх затемнения */}
             <div 
-                className={`fixed top-0 right-0 h-full w-full md:w-[450px] lg:w-[500px] bg-white shadow-2xl transition-transform duration-300 z-50 flex flex-col ${
+                className={`fixed top-0 right-0 h-full w-full md:w-[450px] lg:w-[500px] bg-white shadow-2xl transition-transform duration-300 flex flex-col ${
                     isOpen ? 'translate-x-0' : 'translate-x-full'
                 }`}
+                style={{ 
+                    zIndex: 2001,
+                    position: 'fixed'
+                }}
             >
+
+
                 {/* Заголовок */}
                 <div className="flex items-center justify-between p-4 border-b border-gray-200">
                     <div className="flex items-center gap-2">
