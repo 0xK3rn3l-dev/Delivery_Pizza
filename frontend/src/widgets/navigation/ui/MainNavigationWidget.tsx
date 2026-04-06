@@ -1,4 +1,3 @@
-// widgets/navigation/ui/MainNavigationWidget.tsx
 'use client';
 
 import { NavigationWidget } from './NavigationWidget';

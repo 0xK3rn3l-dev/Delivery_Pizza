@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect, useCallback } from 'react';
-import { ProductCardProps } from '@/widgets/product-card/model/types';
+import { ProductCardProps } from '@/widgets/product-card/model/interfaces';
 
 export interface CartItem extends ProductCardProps {
     quantity: number;

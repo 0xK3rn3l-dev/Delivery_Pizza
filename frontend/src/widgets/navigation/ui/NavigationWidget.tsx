@@ -1,4 +1,3 @@
-// widgets/navigation/ui/NavigationWidget.tsx
 'use client';
 
 interface NavItem {

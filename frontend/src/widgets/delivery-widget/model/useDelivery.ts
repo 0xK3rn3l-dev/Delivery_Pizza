@@ -1,7 +1,7 @@
 // src/widgets/delivery-widget/model/useDelivery.ts
 
 import { useState, useEffect } from 'react';
-import { Address, DeliveryTime, Pizzeria, DeliveryDetails } from './types';
+import { Address, DeliveryTime, Pizzeria, DeliveryDetails } from './interfaces';
 import { useCity } from '@/features/city-selector/model/useCity';
 import { getPizzeriasByCity } from '@/shared/config/interfaces/pizzerias'; 
 

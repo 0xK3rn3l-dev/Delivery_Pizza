@@ -1,6 +1,6 @@
 'use client';
 
-import { ProductCardProps } from '../model/types';
+import { ProductCardProps } from '../model/interfaces';
 import Image from 'next/image';
 import { useCart } from '@/widgets/cart-sidebar/model/CartContext';
 

@@ -1,8 +1,7 @@
 'use client';
 
 import { useState, useMemo } from 'react';
-import { ProductCardProps } from '@/widgets/product-card/model/types';
-import { catalogData } from './catalogData';
+import { catalogData } from '@/shared/api/data-Catalog';
 
 export type CategoryType = 'all' | 'pizza' | 'drink' | 'snack' | 'sauce';
 

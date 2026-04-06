@@ -4,7 +4,6 @@ import { X, Plus, Minus, Trash2, ShoppingBag } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { CartItem } from '../model/useCartSidebar';
-import { useEffect } from 'react';
 
 interface CartSidebarProps {
     isOpen: boolean;

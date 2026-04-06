@@ -1,2 +1,2 @@
 export { ProductCard } from "./ui/ProductCard";
-export type { ProductCardProps } from "./model/types";
+export type { ProductCardProps } from "./model/interfaces";

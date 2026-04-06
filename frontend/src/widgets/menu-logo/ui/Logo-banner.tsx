@@ -1,6 +1,3 @@
-
-
-
 export const LogoBanner = () => {
     return (
         <div className="w-full bg-orange-500 py-3 md:py-4 relative overflow-hidden">

@@ -1,4 +1,4 @@
-import { ProductCardProps } from "@/widgets/product-card/model/types";
+import { ProductCardProps } from "@/widgets/product-card/model/interfaces";
 
 export const catalogData: ProductCardProps[] = [
     // ПИЦЦЫ
