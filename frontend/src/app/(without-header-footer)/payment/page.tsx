@@ -1,4 +1,4 @@
-function checkout() {
+function payment() {
     return (
         <div>
 
@@ -8,4 +8,4 @@ function checkout() {
     )
 }
 
-export default checkout; 
+export default payment; 

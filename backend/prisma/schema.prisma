@@ -1,0 +1,39 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Get a free hosted Postgres database in seconds: `npx create-db`
+
+datasource db {
+  provider = "postgresql"
+}
+
+generator client {
+  provider = "prisma-client"
+  output   = "./generated/prisma"
+  moduleFormat    = "cjs"
+}
+
+//===== User ===== 
+model User {
+  id                 Int       @id @default(autoincrement())
+  email              String    @unique
+  password           String     
+  userName           String?   @map("user_name")
+  phoneHash          String?   @unique // hash от номера  
+  phoneEnc           String?   // сам номер телефона, зашифрованный AES-ключом
+  role               UserRole  @default(REGULAR)
+  isVerified         Boolean   @default(false) @map("is_verified")
+  //isTwoFactorEnable  Boolean  @default(false) @map("is_two_factor_enabled")
+
+
+  createdAt          DateTime  @default(now()) @map("created_at")
+  updatedAt          DateTime  @updatedAt @map("updated_at")
+
+  @@map("users")
+}
+
+enum UserRole {
+  REGULAR
+  ADMIN
+}
+

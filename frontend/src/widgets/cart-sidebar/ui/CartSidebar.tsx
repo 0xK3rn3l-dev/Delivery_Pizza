@@ -1,9 +1,13 @@
 'use client';
 
+import { useRouter } from 'next/navigation';
 import { X, Plus, Minus, Trash2, ShoppingBag } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { CartItem } from '../model/useCartSidebar';
+import { useState } from 'react';
+import { DeliveryModal } from '@/widgets/delivery-widget/ui/DeliveryModal';
+
 
 interface CartSidebarProps {
     isOpen: boolean;
@@ -22,12 +26,54 @@ export const CartSidebar = ({
 }: CartSidebarProps) => {
     const totalPrice = items.reduce((sum, item) => sum + item.price * item.quantity, 0);
     const totalItems = items.reduce((sum, item) => sum + item.quantity, 0);
+    const [showDeliveryModal, setShowDeliveryModal] = useState(false);
+    const [showAuthModal, setShowAuthModal] = useState(false);
+
+    const router = useRouter();
+
+
+
+    const isAuthenticated = () => {
+    const accessToken = localStorage.getItem('access_token');
+    return !!accessToken;
+  };
+
 
 
     const handleCheckout = () => {
-        window.location.href = '/checkout';
+    // 1. Проверяем авторизацию
+    if (!isAuthenticated()) {
+      setShowAuthModal(true); // Показываем модалку "нужно войти"
+      return;
+    }
+
+    // 2. Проверяем адрес доставки
+    const savedAddress = localStorage.getItem('selectedDeliveryAddress');
+    
+    if (savedAddress) {
+      router.push('/payment');
+    } else {
+      setShowDeliveryModal(true);
+    }
+  };
+
+    const handleAddressConfirmed = () => {
+        onClose();
+        router.push('/payment');
     };
 
+    const handleGoToLogin = () => {
+        setShowAuthModal(false);
+        localStorage.setItem('redirect_after_login', '/checkout'); // Запоминаем куда вернуться
+        router.push('/auth/login');
+    };
+
+    const handleGoToRegister = () => {
+        setShowAuthModal(false);
+        localStorage.setItem('redirect_after_login', '/checkout');
+        router.push('/auth/register');
+    };
+    
     return (
         <>
             {/* Затемнение для всего */}
@@ -184,6 +230,45 @@ export const CartSidebar = ({
                     </div>
                 )}
             </div>
-        </>
+                {/* Модалка выбора адреса */}
+                <DeliveryModal 
+                isOpen={showDeliveryModal}
+                onClose={() => setShowDeliveryModal(false)}
+                onAddressConfirmed={handleAddressConfirmed}
+            />
+
+                  {/* Модалка "Нужно войти" */}
+      {showAuthModal && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-[20000]">
+          <div className="bg-white rounded-xl p-6 w-[400px] max-w-[90%] text-center">
+            <div className="text-5xl mb-4">🔐</div>
+            <h3 className="text-xl font-bold mb-2">Требуется авторизация</h3>
+            <p className="text-gray-600 mb-6">
+              Чтобы оформить заказ, пожалуйста, войдите в профиль или зарегистрируйтесь.
+            </p>
+            <div className="flex gap-3">
+              <button
+                onClick={handleGoToLogin}
+                className="flex-1 bg-orange-500 text-white py-2 rounded-lg font-semibold hover:bg-orange-600 transition"
+              >
+                Войти
+              </button>
+              <button
+                onClick={handleGoToRegister}
+                className="flex-1 bg-gray-200 text-gray-700 py-2 rounded-lg font-semibold hover:bg-gray-300 transition"
+              >
+                Регистрация
+              </button>
+            </div>
+            <button
+              onClick={() => setShowAuthModal(false)}
+              className="mt-4 text-sm text-gray-400 hover:text-gray-600 transition"
+            >
+              Вернуться в корзину
+            </button>
+          </div>
+        </div>
+      )}
+    </>
     );
 };

@@ -176,7 +176,7 @@ export const DeliveryWidget = () => {
             {/* Selected address display */}
             {selectedAddress && !isPreviewAddress && (
               <div className="mb-4 p-3 bg-green-50 rounded-lg border border-green-200">
-                <h3 className="font-semibold mb-1 text-green-800">✅ Выбранный адрес:</h3>
+                <h3 className="font-semibold mb-1 text-green-800">Выбранный адрес:</h3>
                 <p className="text-sm text-gray-700">{selectedAddress.address}</p>
               </div>
             )}

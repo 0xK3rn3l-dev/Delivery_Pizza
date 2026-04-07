@@ -1,0 +1,78 @@
+import { BadRequestException, ConflictException, Injectable, Req, Res, UnauthorizedException } from '@nestjs/common';
+import { UserService } from 'src/modules/user/user.service';
+import { JwtService } from '@nestjs/jwt';
+import { HashService } from './hash/hash.service.js'; 
+import { HashField } from './hash/hash.enum.js';
+import type { Response, Request } from 'express';
+import { RegisterDto } from './dto/register.dto.js'
+import { LoginDto } from './dto/login.dto.js';
+
+@Injectable()
+export class AuthService {
+    public constructor(
+        private readonly jwtService: JwtService,
+        private readonly userService: UserService,
+        private readonly hashService: HashService, 
+    ) {}
+
+    public async register(dto: RegisterDto) {
+        const isExist = await this.userService.findByEmail(dto.email)
+        if(isExist){
+            throw new ConflictException('Пользователь с таким email уже существует')
+        }
+
+        const hashedData = await this.hashService.hashFields(
+            { email: dto.email, password: dto.password, phone: dto.phone },
+            [HashField.PASSWORD, HashField.PHONE]
+        );
+
+        const newUser = await this.userService.create(hashedData);
+        
+        return {
+            message: 'Регистрация прошла успешно',
+            user: {email: newUser.email} // for tests
+        };
+    }
+
+    private async validateUser(dto: LoginDto): Promise<any> {
+        const user = await this.userService.findByEmail(dto.email);
+        if (user) {
+            const isPasswordValid = await this.hashService.compare(dto.password, user.password);
+            if (isPasswordValid) {
+                const { password, ...userValidate } = user;
+                return userValidate;
+            }
+        }
+        return null;
+    }
+
+
+    public async login(dto: LoginDto,res: Response) {
+        const user = await this.validateUser(dto);
+        if (!user) {
+            throw new UnauthorizedException('Неверный email или пароль');
+        }
+
+        const payload = { sub: user.id, email: user.email, role: user.role};
+
+        const access_token = await this.jwtService.signAsync(payload, { expiresIn: '15m' });
+        const refresh_token = await this.jwtService.signAsync(payload, {expiresIn: '7d',});
+        
+        res.cookie('refresh_token', refresh_token, {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === 'production',
+            sameSite: 'lax', // 'strict'
+            maxAge: 7 * 24 * 60 * 60 * 1000,
+            path: '/', // path: '/auth/refresh'
+        });
+
+        console.log('Cookie set:', refresh_token); 
+        
+        return {
+            access_token: access_token,
+            user_data: {email: user.email, role: user.role}
+        }
+
+    }
+
+}

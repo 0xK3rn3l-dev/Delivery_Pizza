@@ -128,7 +128,7 @@ export const useDelivery = () => {
     return R * c;
   };
 
-  // Расчет времени доставки (с учетом города)
+  // Расчет времени доставки (с учетом города)  // МБ БЕЗ УЧЕТА ГОРОДА ПРОСТО СПИСОК С ИИ ВСЕХ
   const calculateDeliveryTime = (lat: number, lng: number) => {
     const pizzerias = getPizzeriasByCity(city.id); // 👈 Получаем пиццерии для города
     
