@@ -1,28 +1,22 @@
 'use client';
 
-import { Button } from '@/shared/ui/button/';
+{/* UI COMPONENTS */}
+import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from '@/shared/ui/card';
+import { Mail, Lock, LogIn, Eye, EyeOff, Phone } from 'lucide-react';
 import { Input } from '@/shared/ui/input/Input';
-import { 
-    Card, 
-    CardHeader, 
-    CardTitle, 
-    CardDescription,
-    CardContent,
-    CardFooter 
-} from '@/shared/ui/card';
-
-import Link from 'next/link';
+import { Button } from '@/shared/ui/button/';
+import InputMask from 'react-input-mask';
 import { useState } from 'react';
-import { Mail, Lock, LogIn, Eye, EyeOff } from 'lucide-react';
+import Link from 'next/link';
 
-import { GoogleIcon } from '@/shared/assets/icons/google';
-import { GitHubIcon } from '@/shared/assets/icons/github';
-
-import { useLoginForm } from '../model/useLoginForm';
-import ErrorToast from '@/shared/ui/error-toast/error-toast';
+{/* TOASTS */}
 import IsLoadingComponent from '@/shared/ui/isLoading/isLoading';
+import ErrorToast from '@/shared/ui/error-toast/error-toast';
 
+{/* CORE */}
+import { useLoginForm } from '../model/useLoginForm';
 import { TLoginUserRequirments } from '@/entities/user';
+
 
 export const loginSubmit = async (req: TLoginUserRequirments): Promise<true | string> => {
     console.error('Login submit error:', 'error');
@@ -34,6 +28,7 @@ export function LoginForm() {
         onSubmitLogin: loginSubmit
     });
     const [showPassword, setShowPassword] = useState(false);
+    const [phoneValue, setPhoneValue] = useState('');
 
     return (
         <div className="w-full max-w-md mx-auto">
@@ -56,15 +51,14 @@ export function LoginForm() {
                 <div className="absolute left-1/2 top-1/2 h-96 w-96 -translate-x-1/2 -translate-y-1/2 rounded-full bg-orange-500/5 blur-3xl" />
 
                 <CardHeader className="space-y-2 pb-6 text-center">
-                    
                     <CardTitle className="text-3xl font-bold bg-gradient-to-r from-orange-400 to-orange-600 bg-clip-text text-transparent">
                         Добро пожаловать
                     </CardTitle>
-
                 </CardHeader>
 
                 <CardContent className="relative space-y-6">
                     <form onSubmit={handleSubmit} className="space-y-5">
+                        {/* Поле Email */}
                         <div className="space-y-2">
                             <label className="flex items-center gap-2 text-sm font-medium text-gray-300">
                                 <Mail className="h-4 w-4 text-orange-400" />
@@ -80,6 +74,31 @@ export function LoginForm() {
                             />
                         </div>
 
+                        {/* Поле Телефон */}
+                        <div className="space-y-2">
+                            <label className="flex items-center gap-2 text-sm font-medium text-gray-300">
+                                <Phone className="h-4 w-4 text-orange-400" />
+                                Номер телефона
+                            </label>
+                            
+                            <InputMask
+                              mask="+7 (999) 999-99-99"
+                              maskChar="_"
+                              value={phoneValue}
+                              onChange={(e) => setPhoneValue(e.target.value)}
+                            >
+                              {(inputProps) => (
+                                <Input
+                                  {...inputProps}
+                                  type="tel"
+                                  placeholder="+7 (___) ___-__-__"
+                                  className="bg-gray-800/50 border-gray-700 text-white transition-all duration-200 focus:ring-2 focus:ring-orange-500/20 focus:border-orange-500 focus:bg-gray-800 pr-10"
+                                />
+                              )}
+                            </InputMask>
+                        </div>
+
+                        {/* Поле Пароль */}
                         <div className="space-y-2">
                             <label className="flex items-center gap-2 text-sm font-medium text-gray-300">
                                 <Lock className="h-4 w-4 text-orange-400" />
@@ -103,6 +122,7 @@ export function LoginForm() {
                                 </button>
                             </div>
                         </div>
+
 
                         <div className="flex justify-end">
                             <Link
@@ -131,38 +151,6 @@ export function LoginForm() {
                             )}
                         </Button>
                     </form>
-
-                    {/* Разделитель */}
-                    <div className="relative">
-                        <div className="absolute inset-0 flex items-center">
-                            <div className="w-full border-t border-gray-700" />
-                        </div>
-                        <div className="relative flex justify-center text-xs uppercase">
-                            <span className="bg-gray-800/50 px-2 text-gray-400 backdrop-blur-sm">
-                                или
-                            </span>
-                        </div>
-                    </div>
-
-                    {/* Кнопки соцсетей */}
-                    <div className="grid grid-cols-2 gap-3">
-                        <Button 
-                            variant="outlineDark" 
-                            className="gap-2 border-orange-500/30 text-gray-300 hover:border-orange-500 hover:bg-orange-500/10 hover:text-orange-400"
-                            size="md"
-                        >
-                            <GoogleIcon />
-                            Google
-                        </Button>
-                        <Button 
-                            variant="outlineDark" 
-                            className="gap-2 border-orange-500/30 text-gray-300 hover:border-orange-500 hover:bg-orange-500/10 hover:text-orange-400"
-                            size="md"
-                        >
-                            <GitHubIcon />
-                            GitHub
-                        </Button>
-                    </div>
                 </CardContent>
 
                 <CardFooter className="relative justify-center gap-1 border-t border-gray-700/50 pt-6 text-sm">
