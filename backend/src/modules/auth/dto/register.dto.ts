@@ -14,12 +14,11 @@ export class RegisterDto {
   @MinLength(8, { message: "Пароль должен быть больше или равен 8 символам" })
   @Matches(
     /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*_)[A-Za-z\d_]+$/, 
-    { message: 'Password must contain at least one uppercase letter, one lowercase letter, one number, and one underscore "_"' }
-  )
+    { message: 'Password must contain at least one uppercase letter, one lowercase letter, one number, and one underscore "_"' })
   password!: string;
 
   @ApiProperty({ example: '+79991234567', description: 'Номер телефона', required: false })
-  @IsOptional()
+  @IsNotEmpty()
   @IsPhoneNumber('RU', { message: "Неверный формат номера телефона" })
   phone!: string;
 }

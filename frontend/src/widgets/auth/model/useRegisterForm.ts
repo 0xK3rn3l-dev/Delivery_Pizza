@@ -25,8 +25,9 @@ export function useRegisterForm({ onSubmitRegister }: UseRegisterFormProps) {
 
 		const form = new FormData(e.currentTarget)
 
-		const email = form.get('email')
-		const password = form.get('password')
+		const email = form.get('email') as string;
+		const password = form.get('password') as string;
+		const phone = form.get('phone') as string;
 		const confirmPassword = form.get('confirmPassword')
 
 		// Сужение типов для email и 2-ух паролей засчет проверки на соответствие строковому типу.
@@ -62,7 +63,7 @@ export function useRegisterForm({ onSubmitRegister }: UseRegisterFormProps) {
 
 
 		
-		const res = await onSubmitRegister({ email, password })
+		const res = await onSubmitRegister({ email, phone, password })
 
 		if (res !== true) {
 			setErr(res ?? 'Ошибка регистрации')

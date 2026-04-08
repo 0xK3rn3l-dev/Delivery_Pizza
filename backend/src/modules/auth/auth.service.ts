@@ -6,27 +6,43 @@ import { HashField } from './hash/hash.enum.js';
 import type { Response, Request } from 'express';
 import { RegisterDto } from './dto/register.dto.js'
 import { LoginDto } from './dto/login.dto.js';
+import { PhoneEncryption } from './phone/enc-phone.js';
 
 @Injectable()
 export class AuthService {
+    
     public constructor(
         private readonly jwtService: JwtService,
         private readonly userService: UserService,
         private readonly hashService: HashService, 
+        private readonly phoneEncryption: PhoneEncryption, 
     ) {}
+    
 
+    //private readonly ACCESS_TOKEN_EXPIRES = process.env.JWT_ACCESS_EXPIRES || '15m';
+    //private readonly REFRESH_TOKEN_EXPIRES = process.env.JWT_REFRESH_EXPIRES || '7d';
+    
+    
     public async register(dto: RegisterDto) {
         const isExist = await this.userService.findByEmail(dto.email)
         if(isExist){
             throw new ConflictException('Пользователь с таким email уже существует')
         }
 
-        const hashedData = await this.hashService.hashFields(
-            { email: dto.email, password: dto.password, phone: dto.phone },
-            [HashField.PASSWORD, HashField.PHONE]
-        );
+        const hashedPassword = await this.hashService.hash(dto.password);
+        const phoneHash = this.hashService.hashPhone(dto.phone);
+        const phoneEnc = this.phoneEncryption.encryptPhoneToString(dto.phone);
 
-        const newUser = await this.userService.create(hashedData);
+
+        const userData = {
+            email: dto.email,
+            password: hashedPassword,
+            phoneHash: phoneHash,
+            phoneEnc: phoneEnc,
+            isVerified: false,
+        };
+
+        const newUser = await this.userService.create(userData);
         
         return {
             message: 'Регистрация прошла успешно',
@@ -70,7 +86,7 @@ export class AuthService {
         
         return {
             access_token: access_token,
-            user_data: {email: user.email, role: user.role}
+            user_data: {email: user.email, role: user.role} // Убрать роль позже
         }
 
     }

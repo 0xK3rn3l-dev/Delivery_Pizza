@@ -28,17 +28,13 @@ export const CartSidebar = ({
     const totalItems = items.reduce((sum, item) => sum + item.quantity, 0);
     const [showDeliveryModal, setShowDeliveryModal] = useState(false);
     const [showAuthModal, setShowAuthModal] = useState(false);
-
     const router = useRouter();
 
-
-
+    
     const isAuthenticated = () => {
     const accessToken = localStorage.getItem('access_token');
     return !!accessToken;
   };
-
-
 
     const handleCheckout = () => {
     // 1. Проверяем авторизацию
@@ -64,16 +60,21 @@ export const CartSidebar = ({
 
     const handleGoToLogin = () => {
         setShowAuthModal(false);
-        localStorage.setItem('redirect_after_login', '/checkout'); // Запоминаем куда вернуться
+        localStorage.setItem('redirect_after_login', '/payment'); // Запоминаем куда вернуться
         router.push('/auth/login');
     };
 
     const handleGoToRegister = () => {
         setShowAuthModal(false);
-        localStorage.setItem('redirect_after_login', '/checkout');
+        localStorage.setItem('redirect_after_login', '/payment');
         router.push('/auth/register');
     };
     
+
+
+
+
+
     return (
         <>
             {/* Затемнение для всего */}
@@ -237,8 +238,8 @@ export const CartSidebar = ({
                 onAddressConfirmed={handleAddressConfirmed}
             />
 
-                  {/* Модалка "Нужно войти" */}
-      {showAuthModal && (
+        {/* Модалка "Нужно войти" */}
+        {showAuthModal && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-[20000]">
           <div className="bg-white rounded-xl p-6 w-[400px] max-w-[90%] text-center">
             <div className="text-5xl mb-4">🔐</div>

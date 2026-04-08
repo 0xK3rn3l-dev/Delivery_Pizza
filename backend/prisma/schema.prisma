@@ -24,7 +24,7 @@ model User {
   role               UserRole  @default(REGULAR)
   isVerified         Boolean   @default(false) @map("is_verified")
   //isTwoFactorEnable  Boolean  @default(false) @map("is_two_factor_enabled")
-
+  orders             Order[]
 
   createdAt          DateTime  @default(now()) @map("created_at")
   updatedAt          DateTime  @updatedAt @map("updated_at")
@@ -37,3 +37,18 @@ enum UserRole {
   ADMIN
 }
 
+model Order {
+  id                  Int @id  @default(autoincrement())
+  price               BigInt
+  time_order          DateTime @default(now())
+  status              String
+  checkout            String
+  adress_destination  String
+
+  userId              Int
+  user               User     @relation(fields: [userId], references: [id])
+
+  phone_customer      String
+
+  @@map("orders")
+}

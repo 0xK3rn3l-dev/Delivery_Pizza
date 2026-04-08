@@ -1,69 +1,57 @@
-'use client';
-
-import { type TLoginUserRequirments } from '@/entities/user';
-import { publicValidateLoginData } from '@/features/auth/index';
-import { useRouter } from 'next/navigation';
+// frontend/src/features/auth/model/useLoginForm.ts
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { loginSubmit } from '@/features/auth/api/login.submit';
 
-interface UseLoginFormProps {
-    onSubmitLogin: (data: TLoginUserRequirments) => Promise<true | string>;
+interface LoginCredentials {
+  email: string;
+  phone: string;
+  password: string;
 }
 
-export function useLoginForm({ onSubmitLogin }: UseLoginFormProps) {
-    const [isLoading, setIsLoading] = useState(false);
-    const [err, setErr] = useState<string>('');
-    const router = useRouter();
+export const useLoginForm = () => {
+  const [isLoading, setIsLoading] = useState(false);
+  const [err, setErr] = useState('');
+  const router = useRouter();
 
-    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-        e.preventDefault();
-        setIsLoading(true);
-        setErr('');
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    setIsLoading(true);
+    setErr('');
 
-        const form = new FormData(e.currentTarget);
-        const email = form.get('email') as string;
-        const password = form.get('password') as string;
+    const formData = new FormData(event.currentTarget);
+    const email = formData.get('email') as string;
+    const phone = formData.get('phone') as string;
+    const password = formData.get('password') as string;
 
-        if (!email || !password) {
-            setErr('Пожалуйста, заполните все поля');
-            setIsLoading(false);
-            return;
-        }
+    // Валидация телефона (проверяем, что не пустой и не только маска)
+    const cleanPhone = phone.replace(/\D/g, ''); // убираем все не цифры
+    if (!cleanPhone || cleanPhone.length < 11) {
+      setErr('Введите корректный номер телефона');
+      setIsLoading(false);
+      return;
+    }
 
-        if (typeof email !== 'string' || typeof password !== 'string') {
-            setErr('Невалидные email и пароль');
-            setIsLoading(false);
-            return;
-        }
+    try {
+      const response = await loginSubmit({ email, phone, password });
+      
+      console.log('Успешный вход:', response.user_data);
+      
+      const redirectTo = localStorage.getItem('redirect_after_login');
+      localStorage.removeItem('redirect_after_login');
+      router.push(redirectTo || '/');
+      
+    } catch (error: any) {
+      setErr(error.message || 'Ошибка при входе');
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
-        const emailValidationError = publicValidateLoginData.validateEmail(email);
-        if (typeof emailValidationError === 'string') {
-            setErr(emailValidationError);
-            setIsLoading(false);
-            return;
-        }
-
-        // Валидация Пароля
-        const passwordValidationError = publicValidateLoginData.validatePassword(password);
-        if (typeof passwordValidationError === 'string') {
-            setErr(passwordValidationError);
-            setIsLoading(false);
-            return;
-        }
-
-        try {
-            const result = await onSubmitLogin({ email, password });
-            if (result === true) {
-                router.push('/profile');
-            } else {
-                setErr(result ?? 'Ошибка входа');
-                setIsLoading(false);
-                return;
-            }
-        } catch (error) {
-            setErr('Произошла ошибка при входе. Пожалуйста, попробуйте снова.');
-            setIsLoading(false);
-        }
-    };
-
-    return { handleSubmit, isLoading, err, setErr }; // ✅ Исправлено: круглые скобки, а не фигурные
-}
+  return {
+    isLoading,
+    err,
+    setErr,
+    handleSubmit,
+  };
+};
