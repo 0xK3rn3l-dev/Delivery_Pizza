@@ -5,9 +5,9 @@ import { X, Plus, Minus, Trash2, ShoppingBag } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { CartItem } from '../model/useCartSidebar';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { DeliveryModal } from '@/widgets/delivery-widget/ui/DeliveryModal';
-
+import { checkAuth } from '@/features/auth/api/client';
 
 interface CartSidebarProps {
     isOpen: boolean;
@@ -18,7 +18,7 @@ interface CartSidebarProps {
 }
 
 export const CartSidebar = ({ 
-    isOpen, 
+    isOpen,
     onClose, 
     items, 
     onUpdateQuantity,
@@ -27,52 +27,55 @@ export const CartSidebar = ({
     const totalPrice = items.reduce((sum, item) => sum + item.price * item.quantity, 0);
     const totalItems = items.reduce((sum, item) => sum + item.quantity, 0);
     const [showDeliveryModal, setShowDeliveryModal] = useState(false);
+    const [isAuth, setIsAuth] = useState(false);
+    const [isCheckingAuth, setIsCheckingAuth] = useState(true);
     const [showAuthModal, setShowAuthModal] = useState(false);
     const router = useRouter();
 
-    
-    const isAuthenticated = () => {
-    const accessToken = localStorage.getItem('access_token');
-    return !!accessToken;
-  };
+    useEffect(() => {
+      const verifyAuth = async () => {
+        const auth = await checkAuth();
+        setIsAuth(auth);
+        setIsCheckingAuth(false);
+      };
+      verifyAuth();
+    }, []);
 
     const handleCheckout = () => {
-    // 1. Проверяем авторизацию
-    if (!isAuthenticated()) {
-      setShowAuthModal(true); // Показываем модалку "нужно войти"
-      return;
-    }
-
-    // 2. Проверяем адрес доставки
-    const savedAddress = localStorage.getItem('selectedDeliveryAddress');
+      if (isCheckingAuth) return;
     
-    if (savedAddress) {
-      router.push('/payment');
-    } else {
-      setShowDeliveryModal(true);
+      if (!isAuth) {
+        setShowAuthModal(true);
+        return;
+      }
+
+      const savedAddress = localStorage.getItem('selectedDeliveryAddress');
+      if (savedAddress) {
+        router.push('/payment');
+      } else {
+        setShowDeliveryModal(true);
+      }
     }
-  };
+    
 
     const handleAddressConfirmed = () => {
         onClose();
         router.push('/payment');
     };
 
+
     const handleGoToLogin = () => {
         setShowAuthModal(false);
-        localStorage.setItem('redirect_after_login', '/payment'); // Запоминаем куда вернуться
+        localStorage.setItem('open_cart_after_login', 'true');
         router.push('/auth/login');
     };
 
     const handleGoToRegister = () => {
         setShowAuthModal(false);
-        localStorage.setItem('redirect_after_login', '/payment');
+        localStorage.setItem('open_cart_after_login', 'true');
         router.push('/auth/register');
     };
     
-
-
-
 
 
     return (

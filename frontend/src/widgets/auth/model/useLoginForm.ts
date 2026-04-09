@@ -37,10 +37,14 @@ export const useLoginForm = () => {
       
       console.log('Успешный вход:', response.user_data);
       
-      const redirectTo = localStorage.getItem('redirect_after_login');
-      localStorage.removeItem('redirect_after_login');
-      router.push(redirectTo || '/');
+      //const redirectTo = localStorage.getItem('redirect_after_login');
+      //localStorage.removeItem('redirect_after_login');
+      //router.push(redirectTo || '/');
       
+      router.push('/?openCart=true');
+
+      
+
     } catch (error: any) {
       setErr(error.message || 'Ошибка при входе');
     } finally {

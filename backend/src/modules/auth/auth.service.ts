@@ -91,4 +91,31 @@ export class AuthService {
 
     }
 
+    async refreshToken(req: Request, res: Response) {
+        const refreshToken = req.cookies['refresh_token'];
+  
+        if (!refreshToken) {
+          throw new UnauthorizedException('Refresh token not found');
+        }
+    
+        try {
+          const payload = await this.jwtService.verifyAsync(refreshToken, {
+            secret: process.env.JWT_SECRET,
+          });
+      
+          const user = await this.userService.findById(payload.sub);
+          if (!user) {
+            throw new UnauthorizedException('User not found');
+          }
+      
+          const newPayload = { sub: user.id, email: user.email, role: user.role };
+          const newAccessToken = await this.jwtService.signAsync(newPayload, { expiresIn: '15m' });
+      
+          return { access_token: newAccessToken };
+      
+        } catch (error) {
+          throw new UnauthorizedException('Invalid refresh token');
+        }
+    }
+
 }

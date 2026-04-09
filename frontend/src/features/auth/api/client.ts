@@ -22,6 +22,8 @@ export const setAccessToken = (token: string | null): void => {
   accessToken = token;
 };
 
+
+
 /**
  * Очистить access_token
  */
@@ -153,10 +155,50 @@ export const authFetch = async (
 };
 
 
+export const checkAuth = async (): Promise<boolean> => {
+  // Если есть токен в памяти — сразу true
+  if (accessToken) return true;
+  
+  // Пробуем обновить через refresh_token
+  try {
+    const res = await fetch(`${API_BASE_URL}/auth/refresh`, {
+      method: 'GET',
+      credentials: 'include',
+    });
+    
+    if (res.ok) {
+      const data = await res.json();
+      if (data.access_token) {
+        setAccessToken(data.access_token);
+        return true;
+      }
+    }
+    return false;
+  } catch {
+    return false;
+  }
+};
 
 
-
-
+export const getCurrentUser = async () => {
+  if (!accessToken) return null;
+  
+  try {
+    const res = await fetch(`${API_BASE_URL}/my/profile`, {
+      headers: {
+        'Authorization': `Bearer ${accessToken}`,
+      },
+      credentials: 'include',
+    });
+    
+    if (res.ok) {
+      return res.json();
+    }
+    return null;
+  } catch {
+    return null;
+  }
+};
 
 
 

@@ -7,9 +7,12 @@ import { ThemeSwitcher } from '@/features/ThemeSwitcher';
 import { CartIcon } from '@/shared/assets/icons/CartIcon';
 import { CartSidebar } from '@/widgets/cart-sidebar/ui/CartSidebar';
 import { useCart } from '@/widgets/cart-sidebar/model/CartContext';
+import { User } from 'lucide-react';
+import { useAuth } from '@/features/auth/model/useAuth';
 
 export const Header = () => {
     const { items, totalItems, isOpen, openCart, closeCart, updateQuantity, removeItem } = useCart();
+    const { isAuthenticated, user } = useAuth();
 
     return (
         <>
@@ -65,13 +68,27 @@ export const Header = () => {
                                 )}
                             </div>
                             
-                        <Link href="/auth/login">
-                            {/* Кнопка входа */}
-                            <Button variant="primary" size="md">
-                                Войти
-                            </Button>
-                        </Link>
-                        
+                            {/* Кнопка входа / профиль */}
+                            {isAuthenticated ? (
+                                <Link href="/me/profile">
+                                    <Button 
+                                        variant="outline" 
+                                        size="md"
+                                        className="flex items-center gap-2 hover:bg-orange-500 hover:text-white hover:border-orange-500 transition-all duration-300"
+                                    >
+                                        <User className="h-4 w-4" />
+                                        <span className="hidden sm:inline">
+                                            Профиль
+                                        </span>
+                                    </Button>
+                                </Link>
+                            ) : (
+                                <Link href="/auth/login">
+                                    <Button variant="primary" size="md">
+                                        Войти
+                                    </Button>
+                                </Link>
+                            )}
                         </div>
                     </div>
                 </div>

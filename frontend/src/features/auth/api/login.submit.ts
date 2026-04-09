@@ -24,7 +24,6 @@ export const loginSubmit = async (credentials: LoginCredentials): Promise<LoginR
 
   try {
     const data = await post<LoginResponse>('/auth/login', credentials);
-    
     if (data.access_token) {
       setAccessToken(data.access_token);
     }
