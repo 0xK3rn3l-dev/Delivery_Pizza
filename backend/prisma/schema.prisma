@@ -23,9 +23,11 @@ model User {
   phoneEnc           String?   // сам номер телефона, зашифрованный AES-ключом
   role               UserRole  @default(REGULAR)
   isVerified         Boolean   @default(false) @map("is_verified")
+  ActivationLink     String?   @map("activation_link") 
   //isTwoFactorEnable  Boolean  @default(false) @map("is_two_factor_enabled")
   orders             Order[]
-
+  tokens             Token[]
+  
   createdAt          DateTime  @default(now()) @map("created_at")
   updatedAt          DateTime  @updatedAt @map("updated_at")
 
@@ -36,6 +38,7 @@ enum UserRole {
   REGULAR
   ADMIN
 }
+
 
 model Order {
   id                  Int @id  @default(autoincrement())
@@ -51,4 +54,17 @@ model Order {
   phone_customer      String
 
   @@map("orders")
+}
+
+
+model Token {
+  id           Int      @id @default(autoincrement())
+  refreshToken String   @unique
+  userId       Int
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  expiresAt    DateTime
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  @@map("tokens")
 }

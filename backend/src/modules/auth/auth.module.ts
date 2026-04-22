@@ -8,7 +8,7 @@ import { HashService } from './hash/hash.service.js';
 import { ConfigModule } from '@nestjs/config'; 
 import { PhoneEncryption } from './phone/enc-phone';
 import { OrderModule } from '../order/order.module';
-
+import { TokenService } from './tokens.service';
 @Module({
   imports: [
     ConfigModule, // для jwt passport
@@ -24,9 +24,10 @@ import { OrderModule } from '../order/order.module';
     AuthService, 
     UserService,
     HashService,
-    PhoneEncryption,],
+    PhoneEncryption,
+    TokenService,],
   
-    exports: [AuthService],
+    exports: [AuthService, TokenService],
 })
 
 export class AuthModule {}

@@ -59,6 +59,14 @@ export class UserService {
     }
 
 
+    async findOneByField(field: string, value: any) {
+    return await this.prismaService.user.findFirst({
+        where: {
+            [field]: value
+        }
+    });
+    }
+
     // -----------
     //    help
     // -----------

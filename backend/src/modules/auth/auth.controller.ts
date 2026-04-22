@@ -1,23 +1,26 @@
-import { Body, Controller, Get, HttpCode, HttpStatus, Post, UseGuards, UnauthorizedException, Req, Res } from '@nestjs/common';
+import { Body, Controller, Get, HttpCode, HttpStatus, Post, Req, Res } from '@nestjs/common';
 import { AuthService } from './auth.service.js';
 import { RegisterDto } from './dto/register.dto.js';
 import { LoginDto } from './dto/login.dto.js';
-import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth } from '@nestjs/swagger';
+import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import type { Response, Request } from 'express';
 
 
 @ApiTags('auth')
 @Controller('auth')
 export class AuthController {
-  public constructor(private readonly authService: AuthService) {}
+  public constructor(
+    private readonly authService: AuthService,
+    ) {}
 
   @Post('register')
   @HttpCode(HttpStatus.CREATED)
   @ApiOperation({ summary: 'Регистрация пользователя' })
   @ApiResponse({ status: 201, description: 'Успешно создано' })
-  public async register(@Body() dto: RegisterDto) {
-      return this.authService.register(dto)
+  public async register(@Body() dto: RegisterDto, res: Response) {
+      return this.authService.register(dto, res)
   }
+
 
   @Post('login')
   @HttpCode(HttpStatus.OK)
@@ -30,10 +33,32 @@ export class AuthController {
     return result; 
   }
 
-  @Get('auth/refresh')
+
+  @Post('logout')
   @HttpCode(HttpStatus.OK)
-  async refreshToken(@Req() req: Request, @Res({ passthrough: true }) res: Response) {
-    return this.authService.refreshToken(req, res);
+  @ApiOperation({ summary: 'Авторизация пользователя' })
+  @ApiResponse({ status: 200, description: 'Успешный выход.'})
+  @ApiResponse({ status: 401, description: 'ошибка выхода' })
+  public async logout(res: Response) {
+    return this.authService.logout(res)
   }
- 
+
+
+  @Get('/activate/:link')
+  @HttpCode(HttpStatus.OK)
+  async activate(req, res){
+    const activationLink = req.params.link;
+    await this.authService.activate(activationLink)
+    return res.redirect(process.env.ALLOWED_ORIGIN);
+  }
+  
 }
+
+
+
+  //@Get('refresh')
+  //@HttpCode(HttpStatus.OK)
+  //async refresh(@Req() req: Request, @Res({ passthrough: true }) res: Response) {
+  //  return this.tokenService.refreshTokens(req, res);
+  //}
+ 
