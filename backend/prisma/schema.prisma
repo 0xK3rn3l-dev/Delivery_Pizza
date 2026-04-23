@@ -65,6 +65,7 @@ model Token {
   expiresAt    DateTime
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
-
+  
+  @@index([userId])
   @@map("tokens")
 }

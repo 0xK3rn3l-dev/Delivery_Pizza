@@ -10,6 +10,7 @@ interface CreateUserData {
       phoneEnc: string;
       phoneHash: string;
       isVerified?: boolean;
+      activationLink?: string;  
     }
 
 interface UpdateUserData {
@@ -173,6 +174,7 @@ export class UserService {
                 phoneEnc: data.phoneEnc,
                 phoneHash: data.phoneHash,
                 isVerified: data.isVerified ?? false, // по умолчанию false
+                ActivationLink: data.activationLink, 
             }
         });
         return user;

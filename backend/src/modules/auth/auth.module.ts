@@ -9,6 +9,9 @@ import { ConfigModule } from '@nestjs/config';
 import { PhoneEncryption } from './phone/enc-phone';
 import { OrderModule } from '../order/order.module';
 import { TokenService } from './tokens.service';
+import { MailService } from './mail.service.js';
+import { UserModule } from '../user/user.module.js';
+
 @Module({
   imports: [
     ConfigModule, // для jwt passport
@@ -16,18 +19,19 @@ import { TokenService } from './tokens.service';
     JwtModule.register({
       global: true,
       secret: jwtConstants.secret
-    }),],
+    }),
+    UserModule],
   
   controllers: [AuthController],
   
   providers:   [
     AuthService, 
-    UserService,
     HashService,
     PhoneEncryption,
-    TokenService,],
+    TokenService,
+    MailService],
   
-    exports: [AuthService, TokenService],
+    exports: [AuthService, TokenService, PhoneEncryption],
 })
 
 export class AuthModule {}

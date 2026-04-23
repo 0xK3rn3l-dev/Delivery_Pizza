@@ -13,7 +13,9 @@ export class MailService {
             auth: {
                 user: process.env.SMTP_USER,
                 pass: process.env.SMTP_PASSWORD,
-            }
+            },
+            connectionTimeout: 10000, 
+            greetingTimeout: 5000,
         })     
     }
 
@@ -27,7 +29,7 @@ export class MailService {
                 html: `
                     <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
                         <h1 style="color: #333;">Activate Your Account</h1>
-                        <p>Please click the link below to activate your account:</p>
+                        <p>Please click the button below to activate your account:</p>
                         <a href="${link}" style="display: inline-block; padding: 10px 20px; background-color: #4CAF50; color: white; text-decoration: none; border-radius: 5px;">Activate Account</a>
                         <p>Or copy this link: <a href="${link}">${link}</a></p>
                         <p>This link will expire in 24 hours.</p>
@@ -36,6 +38,7 @@ export class MailService {
             });
         } catch (error) {
             console.error('Error sending email:', error);
+            console.error('FULL ERROR:', JSON.stringify(error, Object.getOwnPropertyNames(error), 2));
             throw new Error('Failed to send activation email');
         }
     }

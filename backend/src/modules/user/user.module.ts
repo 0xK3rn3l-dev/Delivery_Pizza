@@ -1,13 +1,12 @@
-import { Module } from '@nestjs/common';
+import { Module, forwardRef } from '@nestjs/common';
 import { UserService } from './user.service';
 import { PhoneEncryption } from '../auth/phone/enc-phone';
 import { UserController } from './user.controller'; 
 import { OrderModule } from '../order/order.module';
-import { OrderService } from '../order/order.service';
 
 @Module({
-  imports: [OrderModule],
-  providers: [UserService, PhoneEncryption, OrderService],
+  imports: [forwardRef(() => OrderModule)],
+  providers: [UserService, PhoneEncryption],
   controllers: [UserController],
   exports: [UserService],
 })
