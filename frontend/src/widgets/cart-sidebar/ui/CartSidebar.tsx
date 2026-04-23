@@ -7,7 +7,7 @@ import Link from 'next/link';
 import { CartItem } from '../model/useCartSidebar';
 import { useState, useEffect } from 'react';
 import { DeliveryModal } from '@/widgets/delivery-widget/ui/DeliveryModal';
-import { checkAuth } from '@/features/auth/api/client';
+//import { checkAuth } from '@/features/auth/api/client';
 
 interface CartSidebarProps {
     isOpen: boolean;
@@ -32,30 +32,30 @@ export const CartSidebar = ({
     const [showAuthModal, setShowAuthModal] = useState(false);
     const router = useRouter();
 
-    useEffect(() => {
-      const verifyAuth = async () => {
-        const auth = await checkAuth();
-        setIsAuth(auth);
-        setIsCheckingAuth(false);
-      };
-      verifyAuth();
-    }, []);
-
-    const handleCheckout = () => {
-      if (isCheckingAuth) return;
-    
-      if (!isAuth) {
-        setShowAuthModal(true);
-        return;
-      }
-
-      const savedAddress = localStorage.getItem('selectedDeliveryAddress');
-      if (savedAddress) {
-        router.push('/payment');
-      } else {
-        setShowDeliveryModal(true);
-      }
-    }
+    //useEffect(() => {
+    //  const verifyAuth = async () => {
+    //    const auth = await checkAuth();
+    //    setIsAuth(auth);
+    //    setIsCheckingAuth(false);
+    //  };
+    //  verifyAuth();
+    //}, []);
+//
+    //const handleCheckout = () => {
+    //  if (isCheckingAuth) return;
+    //
+    //  if (!isAuth) {
+    //    setShowAuthModal(true);
+    //    return;
+    //  }
+//
+    //  const savedAddress = localStorage.getItem('selectedDeliveryAddress');
+    //  if (savedAddress) {
+    //    router.push('/payment');
+    //  } else {
+    //    setShowDeliveryModal(true);
+    //  }
+    //}
     
 
     const handleAddressConfirmed = () => {
@@ -222,7 +222,7 @@ export const CartSidebar = ({
                         </div>
 
                         <button
-                            onClick={handleCheckout}
+                            //onClick={handleCheckout}
                             className="w-full bg-gradient-to-r from-orange-500 to-orange-600 text-white py-3 rounded-full font-semibold hover:from-orange-600 hover:to-orange-700 transition-all duration-200 hover:scale-[1.02] active:scale-[0.98] shadow-lg"
                         >
                             Оформить заказ • {totalPrice} ₽

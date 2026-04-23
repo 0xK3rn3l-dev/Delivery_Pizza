@@ -8,11 +8,11 @@ import { CartIcon } from '@/shared/assets/icons/CartIcon';
 import { CartSidebar } from '@/widgets/cart-sidebar/ui/CartSidebar';
 import { useCart } from '@/widgets/cart-sidebar/model/CartContext';
 import { User } from 'lucide-react';
-import { useAuth } from '@/features/auth/model/useAuth';
+//import { useAuth } from '@/features/auth/model/useAuth';
 
 export const Header = () => {
     const { items, totalItems, isOpen, openCart, closeCart, updateQuantity, removeItem } = useCart();
-    const { isAuthenticated, user } = useAuth();
+    //const { isAuthenticated, user } = useAuth();
 
     return (
         <>
@@ -68,7 +68,7 @@ export const Header = () => {
                                 )}
                             </div>
                             
-                            {/* Кнопка входа / профиль */}
+                            {/* Кнопка входа / профиль 
                             {isAuthenticated ? (
                                 <Link href="/me/profile">
                                     <Button 
@@ -82,13 +82,14 @@ export const Header = () => {
                                         </span>
                                     </Button>
                                 </Link>
+                                
                             ) : (
                                 <Link href="/auth/login">
                                     <Button variant="primary" size="md">
                                         Войти
                                     </Button>
                                 </Link>
-                            )}
+                            )}*/}
                         </div>
                     </div>
                 </div>
